@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 import ply.lex as lex
+import re
 
 # Lista de palabras reservadas
 reservadas = {
@@ -155,12 +156,6 @@ def t_nuevalinea(t):
 def t_error(t):
     print("Caracter erroneo '%s'" % t.value[0])
     t.lexer.skip(1)
-
-# Construyendo el analizador léxico
-import ply.lex as lex
-import re
-lexer = lex.lex(reflags=re.IGNORECASE)
-
 
 # Asociación de operadores y precedencia
 precedence = (
@@ -430,7 +425,7 @@ parser = yacc.yacc()
 
 def parse(entrada):
     global parser
-    lexer = lex.lex()
+    lexer = lex.lex(reflags=re.IGNORECASE)
     lexer.lineno = 0
     return parser.parse(entrada, lexer = lexer)
 
