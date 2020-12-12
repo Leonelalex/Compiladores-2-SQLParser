@@ -252,7 +252,7 @@ def p_list_conditions(p):
     print('where condition')
 
 def p_sel_cond(p):
-    '''sel_cond : sel_cond AND
+    '''sel_cond : sel_cond AND sel_cond
                 | ID sel_comp ID
                 | ID sel_comp data_type'''
     print('condition: ' + str(p[1]))
