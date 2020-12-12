@@ -73,7 +73,18 @@ reservadas = {
     'pi'        : 'PI',
     'power'     : 'POWER',
     'sqrt'      : 'SQRT',
-    'select'    : 'SELECT'
+    'select'    : 'SELECT',
+    'inner'     : 'INNER',
+    'left'      : 'LEFT',
+    'right'     : 'RIGHT',
+    'full'      : 'FULL',
+    'outer'     : 'OUTER',
+    'on'        : 'ON',
+    'join'      : 'JOIN',
+    'order'     : 'ORDER',
+    'by'        : 'BY', 
+    'asc'       : 'ASC',
+    'desc'      : 'DESC'
 }
 
 # Lista de tokens
@@ -200,10 +211,70 @@ def p_entrada(t):
 
 #region 'Select Analisis'
 
-def p_s_select(t):
-    '''s_select : SELECT MULTI FROM ID PTCOMA'''
+def p_s_select(p):
+    '''s_select : SELECT list_cols FROM list_from list_joins list_conditions list_order PTCOMA'''
     print('Select statement')
 
+def p_list_cols(p):
+    '''list_cols : list_cols COMA ID
+                  | ID 
+                  | MULTI'''
+    print('columna: ' + str(p[1]))
+
+def p_list_from(p):
+    '''list_from : list_from COMA ID
+                  | ID '''
+    print('tabla: ' + str(p[1]))
+
+def p_list_joins(p):
+    '''list_joins : list_joins join_type JOIN ID join_conditions 
+                  | join_type JOIN ID join_conditions
+                  | empty'''
+    print('Join ')
+
+def p_join_type(p):
+    '''join_type : INNER 
+                 | LEFT
+                 | RIGHT
+                 | FULL
+                 | OUTER 
+                 | empty '''
+    print('Join_Type: ' + str(p[1]))
+
+def p_join_conditions(p):
+    '''join_conditions : ON ID sel_comp ID
+                       | ON ID sel_comp data_type
+                       | empty'''
+
+def p_list_conditions(p):
+    '''list_conditions : WHERE sel_cond
+                       | empty '''
+    print('where condition')
+
+def p_sel_cond(p):
+    '''sel_cond : sel_cond AND
+                | ID sel_comp ID
+                | ID sel_comp data_type'''
+    print('condition: ' + str(p[1]))
+
+def p_list_order(p):
+    '''list_order : ORDER BY ID ASC
+                  | ORDER BY ID DESC  
+                  | empty'''
+    print('to do')
+
+def p_selcomp(p):
+    '''sel_comp : IGUAL
+                | MAYIG
+                | MENIG
+                | DIFEQ
+                | MAYOR
+                | MENOR '''
+
+def p_empty(p):
+    '''empty : '''
+    print('empty produccion')
+    pass
 
 #end region 
 
@@ -229,8 +300,7 @@ def p_id_cadena(t):
     print(t[1])
 
 def p_data_type(t):
-    '''data_type : NUMERIC
-            | INTEGER
+    '''data_type : ENTERO
             | TEXT
             | SMALLINT 
             | BEGINT
@@ -427,7 +497,9 @@ def parse(entrada):
     global parser
     lexer = lex.lex(reflags=re.IGNORECASE)
     lexer.lineno = 0
-    return parser.parse(entrada, lexer = lexer)
+    parse_result = parser.parse(entrada, lexer = lexer)
+    print(parse_result)
+    return parse_result
 
 
 #parser.parse("CREATE TYPE inventory_item AS ( 'name text', supplier_id integer, price numeric ) ; CREATE DATABASE name; SHOW DATABASES; SHOW DATAbASES like gg; ALTER DATABASE name RENAME TO new_name; ALTER DATABASE name OWNER TO SESSION_USER; CREATE TABLE my_first_table ( column1 integer PRIMARY KEY, column2 numeric REFERENCES table2,column3 text,column4 varchar(10));CREATE TABLE my_first_table (column1 integer PRIMARY KEY, column2 numeric REFERENCES table3, column3 text, column4 varchar(10) NOT NULL, column5 integer NULL, column4 varchar(10) NOT NULL CONSTRAINT gg UNIQUE); INSERT INTO tabla1 (campo1, campo2) VALUES('valor1', 1), ('valor2', 2); UPDATE tabla1 SET campo2 = 3 WHERE campo2 = 2; DELETE FROM tabla1 WHERE campo2 = 3;")
