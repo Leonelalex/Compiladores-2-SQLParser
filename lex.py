@@ -230,7 +230,7 @@ def p_list_joins(p):
     '''list_joins : list_joins join_type JOIN ID join_conditions 
                   | join_type JOIN ID join_conditions
                   | empty'''
-    print('Join ')
+    
 
 def p_join_type(p):
     '''join_type : INNER 
@@ -239,7 +239,7 @@ def p_join_type(p):
                  | FULL
                  | OUTER 
                  | empty '''
-    print('Join_Type: ' + str(p[1]))
+    print('Join Type: ' + str(p[1]))
 
 def p_join_conditions(p):
     '''join_conditions : ON ID sel_comp ID
@@ -249,19 +249,18 @@ def p_join_conditions(p):
 def p_list_conditions(p):
     '''list_conditions : WHERE sel_cond
                        | empty '''
-    print('where condition')
 
 def p_sel_cond(p):
     '''sel_cond : sel_cond AND sel_cond
                 | ID sel_comp ID
                 | ID sel_comp data_type'''
-    print('condition: ' + str(p[1]))
+    print('where condition: ' + str(p[1]))
 
 def p_list_order(p):
     '''list_order : ORDER BY ID ASC
                   | ORDER BY ID DESC  
                   | empty'''
-    print('to do')
+    print('Order by')
 
 def p_selcomp(p):
     '''sel_comp : IGUAL
@@ -270,10 +269,11 @@ def p_selcomp(p):
                 | DIFEQ
                 | MAYOR
                 | MENOR '''
+    
 
 def p_empty(p):
     '''empty : '''
-    print('empty produccion')
+    
     pass
 
 #end region 
