@@ -320,7 +320,8 @@ def p_s_select(p):
 
 def p_list_cols(p):
     '''list_cols :  DISTINCT list_alias
-                  | MULTI'''
+                  | MULTI
+                  | list_alias '''
     
     #AST graphviz
     try:
@@ -328,9 +329,12 @@ def p_list_cols(p):
         p[0] = id
         ast_graph.node(str(id), str('select list'))
 
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
+        if type(p[1]) == int:
+            ast_graph.edge(str(id), str(p[1]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
 
         if p[2] :
             ast_graph.edge(str(id), str(p[2]))
@@ -345,19 +349,23 @@ def p_list_alias(p):
                   | sel_id '''
     
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('select id'))
+    try: 
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('select id'))
 
-    ast_graph.edge(str(id), str(p[1]))
-
-    if p[3] :
-        ast_graph.edge(str(id), str(p[3]))
-
-    if p[2] :
-        id2=inc_index()
+        if type(p[1]) == int:
+            ast_graph.edge(str(id), str(p[1]))
+        
+        id2 = inc_index()
         ast_graph.node(str(id2), str(p[2]))
-        ast_graph(str(id), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        if p[3]:
+            ast_graph.edge(str(id), str(p[3]))
+
+    except IndexError:
+        print('')
 
 def p_sel_id(p):
     ''' sel_id : ID PUNTO ID AS ID
@@ -366,26 +374,40 @@ def p_sel_id(p):
                   | ID'''
 
     #AST graphviz
-    if p[1] :
+    try:
+
         id = inc_index()
-        ast_graph.node(str(id), str(p[1]))
-        ast_graph.edge(str(id), str(p[1]))
-    if p[2] :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id2), str(p[1]))
-    if p[3] :
-        id2 = inc_index()
-        ast_graph.node(str(id3), str(p[1]))
-        ast_graph.edge(str(id3), str(p[1]))
-    if p[4] :
-        id2 = inc_index()
-        ast_graph.node(str(id4), str(p[1]))
-        ast_graph.edge(str(id4), str(p[1]))
-    if p[5] :
-        id2 = inc_index()
-        ast_graph.node(str(id5), str(p[1]))
-        ast_graph.edge(str(id5), str(p[1]))
+        p[0] = id
+        ast_graph.node(str(id), str('id'))
+
+        if p[1] :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+        if p[2] :
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+        if p[3] :
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[3]))
+            ast_graph.edge(str(id), str(id4))
+
+        if p[4] :
+            id5 = inc_index()
+            ast_graph.node(str(id5), str(p[4]))
+            ast_graph.edge(str(id), str(id5))
+
+        if p[5] :
+            id6 = inc_index()
+            ast_graph.node(str(id6), str(p[5]))
+            ast_graph.edge(str(id), str(id6))
+
+    
+    except IndexError:
+        print('')
 
 def p_list_from(p):
     '''list_from :  list_from COMA from_id
