@@ -4,7 +4,7 @@ import re
 from graphviz import Digraph
 from graphviz import Graph
 
-ast_graph = Digraph(comment='AST')
+ast_graph = Digraph(comment='AST', engine='dot')
 
 errores_lexicos = ""        #Variable para concatenar los errores lexicos y luego agregarlos al archivo de errores
 errores_sintacticos = ""    #Variable para concatenar los errores sintacticos y luego agregarlos al archivo de errores
@@ -268,43 +268,51 @@ def p_s_select(p):
                 | SELECT list_cols FROM list_from list_joins list_conditions list_order PTCOMA'''
     
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id),str("Select Statement"))
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id),str("Select Statement"))
 
-    ast_graph.edge(str(id), str(p[2]))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str("from"))
-    ast_graph.edge(str(id), str(id2))
+        ast_graph.edge(str(id), str(p[2]))
 
-    ast_graph.edge(str(id), str(p[4]))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[3]))
+        ast_graph.edge(str(id), str(id2))
 
-    if p[5] == ';':
-        idcoma = inc_index()
-        ast_graph.node(str(id3), str(';'))
-        ast_graph.edge(str(id), str(idcoma))
-    else:
-        ast_graph.edge(str(id), strp[5])
+        ast_graph.edge(str(id), str(p[4]))
 
-    if p[6] == ';':
-        idcoma = inc_index()
-        ast_graph.node(str(id3), str(';'))
-        ast_graph.edge(str(id), str(idcoma))
-    else:
-        ast_graph.edge(str(id), strp[6])
+        if p[5] == ';':
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(';'))
+            ast_graph.edge(str(id), str(id3))
+        else:
+            ast_graph.edge(str(id), strp[5])
 
-    if p[7] == ';':
-        idcoma = inc_index()
-        ast_graph.node(str(id3), str(';'))
-        ast_graph.edge(str(id), str(idcoma))
-    else:
-        ast_graph.edge(str(id), strp[7])
+        if p[6] == ';':
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(';'))
+            ast_graph.edge(str(id), str(id3))
+        else:
+            ast_graph.edge(str(id), strp[6])
 
-    if p[8] == ';':
-        idcoma = inc_index()
-        ast_graph.node(str(id3), str(';'))
-        ast_graph.edge(str(id), str(idcoma))
+        if p[7] == ';':
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(';'))
+            ast_graph.edge(str(id), str(id3))
+        else:
+            ast_graph.edge(str(id), strp[7])
+
+        if p[8] == ';':
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(';'))
+            ast_graph.edge(str(id), str(id3))
+        
+    except IndexError:
+        print('')
 
 
 
@@ -315,16 +323,20 @@ def p_list_cols(p):
                   | MULTI'''
     
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('select list'))
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('select list'))
 
-    if p[2] :
-        ast_graph.edge(str(id), str(p[2]))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
+        if p[2] :
+            ast_graph.edge(str(id), str(p[2]))
+
+    except IndexError:
+        print('out of range')
     
 
 
@@ -380,41 +392,46 @@ def p_list_from(p):
                   | from_id'''
     
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('from id'))
-    ast_graph.edge(str(id), str(p[1]))
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('from list'))
+        ast_graph.edge(str(id), str(p[1]))
 
-    if p[3] :
-        ast_graph.edge(str(id), str(p[3]))
+        if p[2] : 
+            id2=inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph(str(id), str(p[1]))
 
-    if p[2] : 
-        id2=inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph(str(id), str(p[1]))
+        if p[3] :
+            ast_graph.edge(str(id), str(p[3]))
+    except IndexError:
+        print('')
 
 def p_from_id(p):
     '''from_id : ID AS ID
                 | ID'''
 
     #AST graphviz
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('from id'))
-
-    if p[1] :
+    try:
         id = inc_index()
-        ast_graph.node(str(id), str(p[1]))
-        ast_graph.edge(str(id), str(p[1]))
-    if p[2] :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id2), str(p[1]))
-    if p[3] :
-        id2 = inc_index()
-        ast_graph.node(str(id3), str(p[1]))
-        ast_graph.edge(str(id3), str(p[1]))
+        p[0] = id
+        ast_graph.node(str(id), str('from id'))
+
+        if p[1] :
+            id = inc_index()
+            ast_graph.node(str(id), str(p[1]))
+            ast_graph.edge(str(id), str(p[1]))
+        if p[2] :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id2), str(p[1]))
+        if p[3] :
+            id2 = inc_index()
+            ast_graph.node(str(id3), str(p[1]))
+            ast_graph.edge(str(id3), str(p[1]))
+    except IndexError:
+        print('')
 
     
 
@@ -1256,6 +1273,39 @@ def p_acciones(p):
                 | DROP COLUMN ID
                 | RENAME COLUMN ID TO ID'''
 
+    id = inc_index()
+    p[0] = id
+    ast_graph.node(str(id), str('accions'))
+
+    id2 = inc_index()
+    ast_graph.node(str(id2), str(p[1]))
+    ast_graph.edge(str(id), str(id2))
+
+    if type(p[2]) == int:
+        ast_graph.edge(str(id), str(p[2]))
+    else :
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+    id4 = inc_index()
+    ast_graph.node(str(id4), str(p[3]))
+    ast_graph.edge(str(id), str(id4))
+
+    if type(p[4]) == int:
+        ast_graph.edge(str(id), str(p[4]))
+    else :
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[4]))
+        ast_graph.edge(str(id), str(id4))
+
+    if type(p[5]) == int:
+        ast_graph.edge(str(id), str(p[5]))
+    else :
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[5]))
+        ast_graph.edge(str(id), str(id5))
+
 def p_acc(p):
     '''acc  : const
             | const_keys'''
@@ -1301,6 +1351,42 @@ def p_insert(p):
                 | INSERT INTO ID VALUES lista_values PTCOMA '''
                 #| INSERT INTO ID PARIZQ lista_id PARDER s_select
                 #| INSERT INTO ID s_select''' 
+
+    id = inc_index()
+    p[0] = id
+    ast_graph.node(str(id), str('Insert Statement'))
+
+    id2 = inc_index()
+    ast_graph.node(str(id2), str(p[1]))
+    ast_graph.edge(str(id), str(id2))
+
+    id3 = inc_index()
+    ast_graph.node(str(id3), str(p[2]))
+    ast_graph.edge(str(id), str(id3))
+
+    id4 = inc_index()
+    ast_graph.node(str(id4), str(p[3]))
+    ast_graph.edge(str(id), str(id4))
+
+    id5 = inc_index()
+    ast_graph.node(str(id5), str(p[4]))
+    ast_graph.edge(str(id), str(id5))
+
+    ast_graph.edge(str(id), str(p[5]))
+
+    id6 = inc_index()
+    ast_graph.node(str(id6), str(p[6]))
+    ast_graph.edge(str(id), str(id6))
+
+    id7 = inc_index()
+    ast_graph.node(str(id7), str(p[7]))
+    ast_graph.edge(str(id), str(id7))
+
+    ast_graph.edge(str(id), str(p[8]))
+
+    id8 = inc_index()
+    ast_graph.node(str(id8), str(p[9]))
+    ast_graph.edge(str(id), str(id8))
 
 def p_lista_values(p):
     '''lista_values : lista_values COMA PARIZQ lista_valores PARDER
@@ -1374,6 +1460,40 @@ def p_lista_asig(p):
     '''lista_asig : lista_asig COMA ID IGUAL valores
                   | ID IGUAL valores'''
 
+    id = inc_index()
+    p[0] = id
+    ast_graph.node(str(id), str('List Asig'))
+
+    if type(p[1]) == int :
+        ast_graph.edge(str(id), str(p[1]))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[2]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[3]))
+        ast_graph.edge(str(id), str(id3))
+
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[4]))
+        ast_graph.edge(str(id), str(id4))
+
+        ast_graph.edge(str(id), str(p[5]))
+
+    else :
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+        ast_graph.edge(str(id), str(p[3]))
+
+
 def p_expresion(p):
     '''expresion : NOT expresion
                  | expresion OR expresion
@@ -1402,10 +1522,48 @@ def p_expresion(p):
                  | ID PUNTO ID
                  | valores'''
 
+    id = inc_index()
+    p[0] = id
+    ast_graph.node(str(id), str('Expresion'))
+
+    if type(p[1]) == int :
+        ast_graph.edge(str(id), str(p[1]))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[2]))
+        ast_graph.edge(str(id), str(id2))
+
+        ast_graph.edge(str(id), str(p[3]))
+
+    else:
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        if type(p[2]) == int:
+            ast_graph.edge(str(id), str(p[2]))
+
+        else:
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+            if type(p[3]) == int :
+                ast_graph.edge(str(id), str(p[3]))
+
+                id4 = inc_index()
+                ast_graph.node(str(id4), str(p[4]))
+                ast_graph.edge(str(id), str(id4))
+            else :
+                id4 = inc_index()
+                ast_graph.node(str(id4), str(p[3]))
+                ast_graph.edge(str(id), str(id4))
+
+
 def p_error(p):
     global linea, columna
-    sin_error(t.type, t.value, linea, t.lexpos)
-    columna = columna + len(t.value)
+    sin_error(p.type, p.value, linea, p.lexpos)
+    columna = columna + len(p.value)
 
 
 # Construyendo el analizador sintáctico
@@ -1485,7 +1643,7 @@ def parse(entrada):
     reporte_tokens(entrada)
     reporte_lex_error()
     reporte_sin_error()
-    ast_graph.render('.\\tempPDF\\test2.gv', view=False) 
-    ast_graph.render('.\\tempPDF\\test2.gv.pdf', view=False)
-    ast_graph.render('.\\tempPDF\\test2.png', view=False)
+    ast_graph.render('.\\Diagrama\\Diagrama.gv', view=False) 
+    #ast_graph.render('.\\Diagrama\\Diagrama.gv.pdf', view=False)
+    #ast_graph.render('.\\Diagrama\\Diagrama.png', view=False)
     return parse_result
