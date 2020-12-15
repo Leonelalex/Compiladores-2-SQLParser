@@ -4,7 +4,7 @@ from tkinter import scrolledtext
 from tkinter import messagebox
 from tkinter import filedialog
 import lex 
-import GraficaTest as graf
+
 
 def abrir_btn():
     print('open file')
@@ -37,8 +37,6 @@ def tblsimbolos_click():
 def ast_click():
     print('arbol AST')
 
-def graficar_ast():
-    graf.graficar()
 
 #--- Main Window
 window = Tk()
@@ -79,8 +77,8 @@ btnanalizar.place(x=40,y=320)
 btnejecutar = Button(window,text="Ejecutar",height=2, width=8, command=btnejecutar_click)
 btnejecutar.place(x=130,y=320)
 
-btngraficar = Button(window, text="Graficar", height=2, width=8, command=graficar_ast)
-btngraficar.place(x= 220, y=320)
+#btngraficar = Button(window, text="Graficar", height=2, width=8, command=graficar_ast)
+#btngraficar.place(x= 220, y=320)
 
 #--- Consola de Salida
 lblsalida= Label(window,text="Consola salida",height=1, width=15)
