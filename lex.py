@@ -290,21 +290,21 @@ def p_s_select(p):
             ast_graph.node(str(id3), str(';'))
             ast_graph.edge(str(id), str(id3))
         else:
-            ast_graph.edge(str(id), strp[5])
+            ast_graph.edge(str(id), str(p[5]))
 
         if p[6] == ';':
             id3 = inc_index()
             ast_graph.node(str(id3), str(';'))
             ast_graph.edge(str(id), str(id3))
         else:
-            ast_graph.edge(str(id), strp[6])
+            ast_graph.edge(str(id), str(p[6]))
 
         if p[7] == ';':
             id3 = inc_index()
             ast_graph.node(str(id3), str(';'))
             ast_graph.edge(str(id), str(id3))
         else:
-            ast_graph.edge(str(id), strp[7])
+            ast_graph.edge(str(id), str(p[7]))
 
         if p[8] == ';':
             id3 = inc_index()
@@ -396,15 +396,20 @@ def p_list_from(p):
         id = inc_index()
         p[0] = id
         ast_graph.node(str(id), str('from list'))
-        ast_graph.edge(str(id), str(p[1]))
 
-        if p[2] : 
-            id2=inc_index()
+        if type(p[1]) == int:
+            ast_graph.edge(str(id), str(p[1]))
+            
+            id2 = inc_index()
             ast_graph.node(str(id2), str(p[2]))
-            ast_graph(str(id), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
 
-        if p[3] :
             ast_graph.edge(str(id), str(p[3]))
+
+        else:
+            ast_graph.edge(str(id), str(p[1]))
+
+
     except IndexError:
         print('')
 
@@ -419,17 +424,17 @@ def p_from_id(p):
         ast_graph.node(str(id), str('from id'))
 
         if p[1] :
-            id = inc_index()
-            ast_graph.node(str(id), str(p[1]))
-            ast_graph.edge(str(id), str(p[1]))
-        if p[2] :
             id2 = inc_index()
             ast_graph.node(str(id2), str(p[1]))
-            ast_graph.edge(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+        if p[2] :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
         if p[3] :
             id2 = inc_index()
-            ast_graph.node(str(id3), str(p[1]))
-            ast_graph.edge(str(id3), str(p[1]))
+            ast_graph.node(str(id2), str(p[3]))
+            ast_graph.edge(str(id), str(id2))
     except IndexError:
         print('')
 
@@ -442,34 +447,43 @@ def p_list_joins(p):
                   | JOIN ID join_conditions'''
     
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('join list'))
-    ast_graph.edge(str(id), str(p[1]))
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('join list'))
 
-    if p[1] == 'JOIN' :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id2), str(p[0]))
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id3), str(p[0]))
+        if type(p[1]) == int :
+            ast_graph.edge(str(id), str(p[1]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
 
-    if p[2] == 'JOIN' :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id2), str(p[0]))
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[3]))
-        ast_graph.edge(str(id3), str(p[0]))
+        if type(p[2]) == int:
+            ast_graph.edge(str(id), str(p[2]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-    if p[3] == 'JOIN' :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[3]))
-        ast_graph.edge(str(id2), str(p[0]))
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[4]))
-        ast_graph.edge(str(id3), str(p[0]))
+        if type(p[3]) == int:
+            ast_graph.edge(str(id), str(p[3]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[3]))
+            ast_graph.edge(str(id), str(id2))
+
+        if type(p[4]) == int:
+            ast_graph.edge(str(id), str(p[4]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[4]))
+            ast_graph.edge(str(id), str(id2))
+
+        ast_graph.edge(str(id), str(p[5]))
+
+    except IndexError:
+        print('')
 
     
 
@@ -483,72 +497,88 @@ def p_join_type(p):
                  | FULL
                  | INNER'''
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('join type'))
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('join type'))
 
-    if p[1] :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-    
-    if p[2] :
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
+        if p[1] :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+        
+        if p[2] :
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+    except IndexError:
+        print('')
 
 
 def p_join_conditions(p):
-    '''join_conditions : ON expresion
-                       | '''
+    '''join_conditions : ON expresion'''
     #AST graphviz
+    try:
+        if p[1] :
+            id = inc_index()
+            p[0] = id
+            ast_graph.node(str(id), str('join conditions'))
 
-    if p[1] :
-        id = inc_index()
-        p[0] = id
-        ast_graph.node(str(id), str('join conditions'))
-        ast_graph.edge(str(id), p[2])
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            ast_graph.edge(str(id), str(p[2]))
+
+    except IndexError:
+        print('')
 
 
 def p_list_conditions(p):
-    '''list_conditions : WHERE expresion
-                       | '''
+    '''list_conditions : WHERE expresion'''
 
     #AST graphviz
-    if p[1] :
+    try:
+
         id = inc_index()
         p[0] = id
-        ast_graph.node(str(id), str('conditions'))
-        ast_graph.edge(str(id), str(p[2]))
+        ast_graph.node(str(id), str('list conditions'))
+
         id2 = inc_index()
         ast_graph.node(str(id2), str(p[1]))
         ast_graph.edge(str(id), str(id2))
 
+        ast_graph.edge(str(id), str(p[2]))
+
+    except IndexError:
+        print('')
+
 def p_list_order(p):
     '''list_order : ORDER BY ID ASC
-                  | ORDER BY ID DESC  
-                  | '''
+                  | ORDER BY ID DESC'''
 
     #AST graphviz
-    id = inc_index()
-    p[0] = id
+    try:
+        id = inc_index()
+        p[0] = id
 
-    ast_graph.node(str(id), str('order'))
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
+        ast_graph.node(str(id), str('order'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
+    except IndexError:
+        print('')
 
 #end region 
 
@@ -556,45 +586,48 @@ def p_create_type(p):
     'create_type : CREATE TYPE ID AS ENUM PARIZQ lista1 PARDER PTCOMA'
 
     #AST graphviz
-    id = inc_index()
-    p[0] = id
+    try:
+        id = inc_index()
+        p[0] = id
 
-    ast_graph.node(str(id), str('Create Statement'))
+        ast_graph.node(str(id), str('Create Statement'))
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
 
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.node(str(id), str(id4))
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.node(str(id), str(id4))
 
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
 
-    id6 = inc_index()
-    ast_graph.node(str(id6), str(p[5]))
-    ast_graph.node(str(id), str(id6))
+        id6 = inc_index()
+        ast_graph.node(str(id6), str(p[5]))
+        ast_graph.node(str(id), str(id6))
 
-    id7 = inc_index()
-    ast_graph.node(str(id7), str(p[6]))
-    ast_graph,edge(str(id), str(id7))
+        id7 = inc_index()
+        ast_graph.node(str(id7), str(p[6]))
+        ast_graph,edge(str(id), str(id7))
 
-    if p[7] :
         ast_graph.edge(str(id), str(p[7]))
 
-    id8 = inc_index()
-    ast_graph.node(str(id8), str(p[8]))
-    ast_graph,edge(str(id), str(id8))
+        id8 = inc_index()
+        ast_graph.node(str(id8), str(p[8]))
+        ast_graph,edge(str(id), str(id8))
 
-    id9 = inc_index()
-    ast_graph.node(str(id9), str(p[9]))
-    ast_graph,edge(str(id), str(id9))
+        id9 = inc_index()
+        ast_graph.node(str(id9), str(p[9]))
+        ast_graph,edge(str(id), str(id9))
+
+    except IndexError:
+        print('')
 
     
 
@@ -602,26 +635,31 @@ def p_lista1(p):
     '''lista1 : lista1 COMA CADENA
             | CADENA'''
     
-    id = inc_index()
-    p[0] = id
+    #AST Graphviz
+    try:
+        id = inc_index()
+        p[0] = id
 
-    ast_graph.node(str(id), str('lista cadena'))
+        ast_graph.node(str(id), str('lista cadena'))
 
-    if p[2] :
-        ast_graph.edge(str(id), str(p[1]))
+        if p[2] :
+            ast_graph.edge(str(id), str(p[1]))
 
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[3]))
-        ast_graph.node(str(id), str(id3))
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[3]))
+            ast_graph.node(str(id), str(id3))
 
-    else :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
+        else :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+    
+    except IndexError:
+        print('')
 
 def p_data_type(p):
     '''data_type : NUMERIC
@@ -644,25 +682,28 @@ def p_data_type(p):
             | TIME time_zone
             | INTERVAL
             | ID'''
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('data type'))
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('data type'))
+        if p[1] == 'timestamp': 
+            ast_graph.edge(str(id), str(p[2]))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+        elif p[1] == 'time':
+            ast_graph.edge(str(id), str(p[2]))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+        else :    
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
 
-    if p[1] == 'timestamp': 
-        ast_graph.edge(str(id), str(p[2]))
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-    elif p[1] == 'time':
-        ast_graph.edge(str(id), str(p[2]))
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-    else :    
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
+    except IndexError:
+        print('')
 
     
 
@@ -670,31 +711,309 @@ def p_time_zone(p):
     '''time_zone    : WITH TIME ZONE
                     | WITHOUT TIME ZONE'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('time zone'))
+    try:
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph,edge(str(id), str(id2))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('time zone'))
 
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[1]))
-    ast_graph,edge(str(id), str(id3))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph,edge(str(id), str(id2))
 
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[1]))
-    ast_graph,edge(str(id), str(id4))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[1]))
+        ast_graph,edge(str(id), str(id3))
+
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[1]))
+        ast_graph,edge(str(id), str(id4))
+
+    except IndexError:
+        print('')
 
 def p_create_db(p):
     '''create_db : CREATE DATABASE c_db PTCOMA
                  | CREATE OR REPLACE DATABASE c_db PTCOMA'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('create statement'))
+    try:
 
-    if p[6]:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('create statement'))
+
+        if p[6]:
+
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[3]))
+            ast_graph.edge(str(id), str(id4))
+
+            id5 = inc_index()
+            ast_graph.node(str(id5), str(p[4]))
+            ast_graph.edge(str(id), str(id5))
+
+            ast_graph.edge(str(id), str(p[5]))
+
+            id6 = inc_index()
+            ast_graph.node(str(id6), str(p[6]))
+            ast_graph.edge(str(id), str(id6))
+
+        else :
+
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+            ast_graph.edge(str(id), str(p[3]))
+
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[4]))
+            ast_graph.edge(str(id), str(id4))
+
+    except IndexError:
+        print('')
+
+
+def p_c_db(p):
+    '''c_db : IF NOT EXISTS c_db1
+            | c_db1'''
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('db exist'))
+
+        if p[2] :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[3]))
+            ast_graph.edge(str(id), str(id4))
+
+            ast_graph.edge(str(id), str(p[4]))
+        
+        else :
+
+            ast_graph.edge(str(id), str(p[1]))
+
+    except IndexError:
+        print('')
+
+def p_c_db1(p):
+    '''c_db1 : ID owner_mode
+             | ID'''
+
+    try: 
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('db owner'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.node(str(id), str(id2))
+
+        if p[2] :
+            ast_graph.edge(str(id), str(p[2]))
+    except IndexError:
+        print('')
+
+
+def p_owner_mode(p):
+    '''owner_mode : owner_mode OWNER igual_id 
+                  | owner_mode MODE igual_int
+                  | OWNER igual_id 
+                  | MODE igual_int'''
+
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('owner mode'))
+
+        if p[3] :
+            ast_graph.edge(str(id), str(p[1]))
+
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
+
+            ast_graph.edge(str(id), str(p[3]))
+        
+        else :
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            ast_graph.edge(str(id), str(p[2]))
+
+    except IndexError:
+        print('')
+
+def p_igual_id(p):
+    '''igual_id : IGUAL ID
+                | ID'''
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('igual'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        if p[2]:
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+    except IndexError:
+        print('')
+
+def p_igual_int(p):
+    '''igual_int : IGUAL ENTERO
+                | ENTERO'''
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('igual entero'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        if p[2]:
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+    except IndexError:
+        print('')
+
+def p_show_db(p):
+    '''show_db : SHOW DATABASES PTCOMA'''
+
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Show Statement'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
+    except IndexError:
+        print('')
+
+def p_alter_db(p):
+    '''alter_db : ALTER DATABASE ID al_db PTCOMA'''
+
+    try: 
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Alter Statement'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
+
+        ast_graph.edge(str(id), str(p[4]))
+
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[5]))
+        ast_graph.edge(str(id), str(id5))
+
+    except IndexError:
+        print('')
+     
+
+def p_al_db(p):
+    '''al_db : RENAME TO ID
+            | OWNER TO owner_db'''
+    
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Alter db'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+        if type(p[3]) == int: 
+            ast_graph.edge(str(id), str(p[3]))
+        else:
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[3]))
+            ast_graph.edge(str(id), str(id4))
+
+    except IndexError:
+        print('')
+
+def p_owner_db(p):
+    '''owner_db : ID
+                | CURRENT_USER
+                | SESSION_USER'''
+    
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Owner db'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+    except IndexError:
+        print('')
+
+def p_drop_db(p):
+    '''drop_db  : DROP DATABASE ID PTCOMA
+                | DROP DATABASE IF EXISTS ID PTCOMA'''
+
+    try: 
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Drop Statement'))
 
         id2 = inc_index()
         ast_graph.node(str(id2), str(p[1]))
@@ -712,320 +1031,101 @@ def p_create_db(p):
         ast_graph.node(str(id5), str(p[4]))
         ast_graph.edge(str(id), str(id5))
 
-        ast_graph.edge(str(id), str(p[5]))
+        if p[5] :
+            id6 = inc_index()
+            ast_graph.node(str(id6), str(p[5]))
+            ast_graph.edge(str(id), str(id6))
 
-        id6 = inc_index()
-        ast_graph.node(str(id6), str(p[6]))
-        ast_graph.edge(str(id), str(id6))
+        if p[6] :
+            id7 = inc_index()
+            ast_graph.node(str(id7), str(p[6]))
+            ast_graph.edge(str(id), str(id7))
 
-    else :
-
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
-
-        ast_graph.edge(str(id), str(p[3]))
-
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[4]))
-        ast_graph.edge(str(id), str(id4))
-
-
-def p_c_db(p):
-    '''c_db : IF NOT EXISTS c_db1
-            | c_db1'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('db exist'))
-
-    if p[2] :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
-
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[3]))
-        ast_graph.edge(str(id), str(id4))
-
-        ast_graph.edge(str(id), str(p[4]))
-    
-    else :
-
-        ast_graph.edge(str(id), str(p[1]))
-
-def p_c_db1(p):
-    '''c_db1 : ID owner_mode
-             | ID'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('db owner'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.node(str(id), str(id2))
-
-    if p[2] :
-        ast_graph.edge(str(id), str(p[2]))
-
-
-def p_owner_mode(p):
-    '''owner_mode : owner_mode OWNER igual_id 
-                  | owner_mode MODE igual_int
-                  | OWNER igual_id 
-                  | MODE igual_int'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('owner mode'))
-
-    if p[3] :
-        ast_graph.edge(str(id), str(p[1]))
-
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
-
-        ast_graph.edge(str(id), str(p[3]))
-    
-    else :
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-
-        ast_graph.edge(str(id), str(p[2]))
-
-def p_igual_id(p):
-    '''igual_id : IGUAL ID
-                | ID'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('igual'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    if p[2]:
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
-
-def p_igual_int(p):
-    '''igual_int : IGUAL ENTERO
-                | ENTERO'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('igual entero'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    if p[2]:
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
-
-def p_show_db(p):
-    '''show_db : SHOW DATABASES PTCOMA'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Show Statement'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-
-def p_alter_db(p):
-    '''alter_db : ALTER DATABASE ID al_db PTCOMA'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Alter Statement'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-
-    ast_graph.edge(str(id), str(p[4]))
-
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[5]))
-    ast_graph.edge(str(id), str(id5))
-     
-
-def p_al_db(p):
-    '''al_db : RENAME TO ID
-            | OWNER TO owner_db'''
-    
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Alter db'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    if type(p[3]) == int: 
-        ast_graph.edge(str(id), str(p[3]))
-    else:
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[3]))
-        ast_graph.edge(str(id), str(id4))
-
-def p_owner_db(p):
-    '''owner_db : ID
-                | CURRENT_USER
-                | SESSION_USER'''
-    
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Owner db'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-def p_drop_db(p):
-    '''drop_db  : DROP DATABASE ID PTCOMA
-                | DROP DATABASE IF EXISTS ID PTCOMA'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Drop Statement'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
-
-    if p[5] :
-        id6 = inc_index()
-        ast_graph.node(str(id6), str(p[5]))
-        ast_graph.edge(str(id), str(id6))
-
-    if p[6] :
-        id7 = inc_index()
-        ast_graph.node(str(id7), str(p[6]))
-        ast_graph.edge(str(id), str(id7))
+    except IndexError:
+        print('')
 
 def p_create_table(p): 
     '''create_table   : CREATE TABLE ID PARIZQ valores PARDER PTCOMA
                       | CREATE TABLE ID PARIZQ valores PARDER INHERITS PARIZQ ID PARDER PTCOMA'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Create Table Statement'))
+    try: 
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Create Table Statement'))
 
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
 
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
 
-    id6 = inc_index()
-    ast_graph.node(str(id6), str(p[5]))
-    ast_graph.edge(str(id), str(id6))
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
 
-    id7 = inc_index()
-    ast_graph.node(str(id7), str(p[6]))
-    ast_graph.edge(str(id), str(id7))
+        id6 = inc_index()
+        ast_graph.node(str(id6), str(p[5]))
+        ast_graph.edge(str(id), str(id6))
 
-    id8 = inc_index()
-    ast_graph.node(str(id8), str(p[7]))
-    ast_graph.edge(str(id), str(id8))
+        id7 = inc_index()
+        ast_graph.node(str(id7), str(p[6]))
+        ast_graph.edge(str(id), str(id7))
 
-    if p[8] :
-        id9 = inc_index()
-        ast_graph.node(str(id9), str(p[8]))
-        ast_graph.edge(str(id), str(id9))
+        id8 = inc_index()
+        ast_graph.node(str(id8), str(p[7]))
+        ast_graph.edge(str(id), str(id8))
 
-    if p[9] :
-        id10 = inc_index()
-        ast_graph.node(str(id10), str(p[9]))
-        ast_graph.edge(str(id), str(id10))
+        if p[8] :
+            id9 = inc_index()
+            ast_graph.node(str(id9), str(p[8]))
+            ast_graph.edge(str(id), str(id9))
 
-    if p[10] :
-        id11 = inc_index()
-        ast_graph.node(str(id11), str(p[10]))
-        ast_graph.edge(str(id), str(id11))
+        if p[9] :
+            id10 = inc_index()
+            ast_graph.node(str(id10), str(p[9]))
+            ast_graph.edge(str(id), str(id10))
 
-    if p[11] :
-        id12 = inc_index()
-        ast_graph.node(str(id12), str(p[11]))
-        ast_graph.edge(str(id), str(id12))
+        if p[10] :
+            id11 = inc_index()
+            ast_graph.node(str(id11), str(p[10]))
+            ast_graph.edge(str(id), str(id11))
+
+        if p[11] :
+            id12 = inc_index()
+            ast_graph.node(str(id12), str(p[11]))
+            ast_graph.edge(str(id), str(id12))
+
+    except IndexError:
+        print('')
 
 def p_valores(p):
     '''valores  : colum_list
                 | colum_list COMA const_keys '''
+    try: 
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Values'))
-    
-    ast_graph.edge(str(id), str(p[1]))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Values'))
+        
+        ast_graph.edge(str(id), str(p[1]))
 
-    if p[2]:
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
+        if p[2]:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-    if p[3]:
-        ast_graph.edge(str(id), str(p[3]))
+        if p[3]:
+            ast_graph.edge(str(id), str(p[3]))
+
+    except IndexError:
+        print('')
 
 def p_colum_list(p):
     '''colum_list   : colum_list COMA ID data_type 
@@ -1033,41 +1133,46 @@ def p_colum_list(p):
                     | ID data_type
                     | ID data_type const'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Column List'))
+    try:
 
-    if type(p[1]) == int :
-        ast_graph.edge(str(id), str(p[1]))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Column List'))
 
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
+        if type(p[1]) == int :
+            ast_graph.edge(str(id), str(p[1]))
 
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[3]))
-        ast_graph.edge(str(id), str(id3))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[4]))
-        ast_graph.edge(str(id), str(id4))
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[3]))
+            ast_graph.edge(str(id), str(id3))
 
-        ast_graph.edge(str(id), str(p[5]))
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[4]))
+            ast_graph.edge(str(id), str(id4))
 
-        if p[6]:
-            id5 = inc_index()
-            ast_graph.node(str(id5), str(p[6]))
-            ast_graph.edge(str(id), str(id5))
+            ast_graph.edge(str(id), str(p[5]))
 
-    else:  
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))  
+            if p[6]:
+                id5 = inc_index()
+                ast_graph.node(str(id5), str(p[6]))
+                ast_graph.edge(str(id), str(id5))
 
-        ast_graph.edge(str(id), str(p[2]))
+        else:  
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))  
 
-        if p[3]:
-            ast_graph.edge(str(id), str(p[3]))
+            ast_graph.edge(str(id), str(p[2]))
+
+            if p[3]:
+                ast_graph.edge(str(id), str(p[3]))
+
+    except IndexError:
+        print('')
 
 def p_const_keys(p):
     '''const_keys   : const_keys COMA PRIMARY KEY PARIZQ lista_id PARDER
@@ -1075,95 +1180,100 @@ def p_const_keys(p):
                     | PRIMARY KEY PARIZQ lista_id PARDER
                     | FOREIGN KEY PARIZQ lista_id PARDER REFERENCES ID PARIZQ lista_id PARDER'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Const Keys'))
+    try:
 
-    if type(p[1]) == int :
-        ast_graph.edge(str(id), str(p[1]))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Const Keys'))
 
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
+        if type(p[1]) == int :
+            ast_graph.edge(str(id), str(p[1]))
 
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[3]))
-        ast_graph.edge(str(id), str(id3))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[4]))
-        ast_graph.edge(str(id), str(id4))
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[3]))
+            ast_graph.edge(str(id), str(id3))
 
-        id5 = inc_index()
-        ast_graph.node(str(id5), str(p[5]))
-        ast_graph.edge(str(id), str(id5))
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[4]))
+            ast_graph.edge(str(id), str(id4))
 
-        ast_graph.edge(str(id), str(p[6]))
+            id5 = inc_index()
+            ast_graph.node(str(id5), str(p[5]))
+            ast_graph.edge(str(id), str(id5))
 
-        id6 = inc_index()
-        ast_graph.node(str(id6), str(p[7]))
-        ast_graph.edge(str(id), str(id6))
+            ast_graph.edge(str(id), str(p[6]))
 
-        if p[8]:
-            id7 = inc_index()
-            ast_graph.node(str(id7), str(p[8]))
-            ast_graph.edge(str(id), str(id7))
-
-        if p[9]:
-            id8 = inc_index()
-            ast_graph.node(str(id8), str(p[9]))
-            ast_graph.edge(str(id), str(id8))
-
-        if p[10]:
-            id9 = inc_index()
-            ast_graph.node(str(id9), str(p[10]))
-            ast_graph.edge(str(id), str(id9))
-
-        if p[11]:
-            ast_graph.edge(str(id), str(p[11]))
-
-        if p[12]:
-            id10 = inc_index()
-            ast_graph.node(str(id10), str(p[12]))
-            ast_graph.edge(str(id), str(id10))
-    
-    else:
-
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
-
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[3]))
-        ast_graph.edge(str(id), str(id4))
-
-        ast_graph.edge(str(id), str(p[4]))
-
-        id5 = inc_index()
-        ast_graph.node(str(id5), str(p[5]))
-        ast_graph.edge(str(id), str(id5))
-
-        if p[6]:
             id6 = inc_index()
-            ast_graph.node(str(id6), str(p[6]))
+            ast_graph.node(str(id6), str(p[7]))
             ast_graph.edge(str(id), str(id6))
 
-        if p[7]:
-            id7 = inc_index()
-            ast_graph.node(str(id7), str(p[7]))
-            ast_graph.edge(str(id), str(id7))
+            if p[8]:
+                id7 = inc_index()
+                ast_graph.node(str(id7), str(p[8]))
+                ast_graph.edge(str(id), str(id7))
 
-        if p[8]:
-            id8 = inc_index()
-            ast_graph.node(str(id8), str(p[8]))
-            ast_graph.edge(str(id), str(id8))
+            if p[9]:
+                id8 = inc_index()
+                ast_graph.node(str(id8), str(p[9]))
+                ast_graph.edge(str(id), str(id8))
 
-        if p[9]:
-            ast_graph.edge(str(id), str(p[9]))
+            if p[10]:
+                id9 = inc_index()
+                ast_graph.node(str(id9), str(p[10]))
+                ast_graph.edge(str(id), str(id9))
+
+            if p[11]:
+                ast_graph.edge(str(id), str(p[11]))
+
+            if p[12]:
+                id10 = inc_index()
+                ast_graph.node(str(id10), str(p[12]))
+                ast_graph.edge(str(id), str(id10))
+        
+        else:
+
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[3]))
+            ast_graph.edge(str(id), str(id4))
+
+            ast_graph.edge(str(id), str(p[4]))
+
+            id5 = inc_index()
+            ast_graph.node(str(id5), str(p[5]))
+            ast_graph.edge(str(id), str(id5))
+
+            if p[6]:
+                id6 = inc_index()
+                ast_graph.node(str(id6), str(p[6]))
+                ast_graph.edge(str(id), str(id6))
+
+            if p[7]:
+                id7 = inc_index()
+                ast_graph.node(str(id7), str(p[7]))
+                ast_graph.edge(str(id), str(id7))
+
+            if p[8]:
+                id8 = inc_index()
+                ast_graph.node(str(id8), str(p[8]))
+                ast_graph.edge(str(id), str(id8))
+
+            if p[9]:
+                ast_graph.edge(str(id), str(p[9]))
+
+    except IndexError:
+        print('')
 
 
 def p_const(p):
@@ -1188,81 +1298,96 @@ def p_const(p):
                 | PRIMARY KEY
                 | REFERENCES ID PARIZQ lista_id PARDER'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Constant'))
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Constant'))
+
+    except IndexError:
+        print('')
 
 def p_lista_id(p):
     '''lista_id : lista_id COMA ID
                 | ID'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('ID List'))
+    try: 
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('ID List'))
 
-    if type(p[1]) == int :
-        ast_graph.edge(str(id), str(p[1]))
+        if type(p[1]) == int :
+            ast_graph.edge(str(id), str(p[1]))
 
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph,edge(str(id), str(id2))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph,edge(str(id), str(id2))
 
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[3]))
-        ast_graph,edge(str(id), str(id3))
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[3]))
+            ast_graph,edge(str(id), str(id3))
 
-    else:
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph,edge(str(id), str(id2))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph,edge(str(id), str(id2))
+
+    except IndexError:
+        print('')
 
 def p_drop_table(p):
     'drop_table : DROP TABLE ID PTCOMA'
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('ID List'))
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('ID List'))
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
 
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
 
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
+    except IndexError:
+        print('')
 
 def p_alter_table(p):
     'alter_table    : ALTER TABLE ID acciones PTCOMA'
+    try:
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('ID List'))
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('ID List'))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
 
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
 
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
+        ast_graph.edge(str(id), str(p[4]))
 
-    ast_graph.edge(str(id), str(p[4]))
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[5]))
+        ast_graph.edge(str(id), str(id5))
 
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[5]))
-    ast_graph.edge(str(id), str(id5))
+    except IndexError:
+        print('')
 
 def p_acciones(p):
     '''acciones : ADD acc
@@ -1273,215 +1398,68 @@ def p_acciones(p):
                 | DROP COLUMN ID
                 | RENAME COLUMN ID TO ID'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('accions'))
+    try:
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('accions'))
 
-    if type(p[2]) == int:
-        ast_graph.edge(str(id), str(p[2]))
-    else :
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[2]))
-        ast_graph.edge(str(id), str(id3))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
+        if type(p[2]) == int:
+            ast_graph.edge(str(id), str(p[2]))
+        else :
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
 
-    if type(p[4]) == int:
-        ast_graph.edge(str(id), str(p[4]))
-    else :
         id4 = inc_index()
-        ast_graph.node(str(id4), str(p[4]))
+        ast_graph.node(str(id4), str(p[3]))
         ast_graph.edge(str(id), str(id4))
 
-    if type(p[5]) == int:
-        ast_graph.edge(str(id), str(p[5]))
-    else :
-        id5 = inc_index()
-        ast_graph.node(str(id5), str(p[5]))
-        ast_graph.edge(str(id), str(id5))
+        if type(p[4]) == int:
+            ast_graph.edge(str(id), str(p[4]))
+        else :
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[4]))
+            ast_graph.edge(str(id), str(id4))
+
+        if type(p[5]) == int:
+            ast_graph.edge(str(id), str(p[5]))
+        else :
+            id5 = inc_index()
+            ast_graph.node(str(id5), str(p[5]))
+            ast_graph.edge(str(id), str(id5))
+
+    except IndexError:
+        print('')
 
 def p_acc(p):
     '''acc  : const
             | const_keys'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('acc'))
+    try:
 
-    ast_graph.edge(str(id), str(p[1]))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('acc'))
+
+        ast_graph.edge(str(id), str(p[1]))
+
+    except IndexError:
+        print('')
 
 def p_delete(p):
     '''s_delete : DELETE FROM ID PTCOMA
                 | DELETE FROM ID WHERE expresion PTCOMA '''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('ID List'))
+    try:
 
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
-
-    ast_graph.edge(str(id), str(p[5]))
-
-    id6 = inc_index()
-    ast_graph.node(str(id6), str(p[6]))
-    ast_graph.edge(str(id), str(id6))
-
-def p_insert(p):
-    '''s_insert : INSERT INTO ID PARIZQ lista_id PARDER VALUES lista_values PTCOMA
-                | INSERT INTO ID VALUES lista_values PTCOMA '''
-                #| INSERT INTO ID PARIZQ lista_id PARDER s_select
-                #| INSERT INTO ID s_select''' 
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Insert Statement'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[4]))
-    ast_graph.edge(str(id), str(id5))
-
-    ast_graph.edge(str(id), str(p[5]))
-
-    id6 = inc_index()
-    ast_graph.node(str(id6), str(p[6]))
-    ast_graph.edge(str(id), str(id6))
-
-    id7 = inc_index()
-    ast_graph.node(str(id7), str(p[7]))
-    ast_graph.edge(str(id), str(id7))
-
-    ast_graph.edge(str(id), str(p[8]))
-
-    id8 = inc_index()
-    ast_graph.node(str(id8), str(p[9]))
-    ast_graph.edge(str(id), str(id8))
-
-def p_lista_values(p):
-    '''lista_values : lista_values COMA PARIZQ lista_valores PARDER
-                     | PARIZQ lista_valores PARDER'''
-
-def p_lista_valores(p):
-    '''lista_valores : lista_valores COMA valores
-                     | valores'''
-    
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Values List'))
-    
-    ast_graph.edge(str(id), str(p[1]))
-
-    if p[2]:
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
-
-    if p[3]:
-        ast_graph.edge(str(id), str(p[3]))
-
-def p_valores(p):
-    '''valores : CADENA
-               | ENTERO
-               | DECIMA'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Values List'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-def p_s_update(p):
-    '''s_update : UPDATE ID SET lista_asig PTCOMA
-                | UPDATE ID SET lista_asig WHERE expresion PTCOMA'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Values List'))
-
-    id2 = inc_index()
-    ast_graph.node(str(id2), str(p[1]))
-    ast_graph.edge(str(id), str(id2))
-
-    id3 = inc_index()
-    ast_graph.node(str(id3), str(p[2]))
-    ast_graph.edge(str(id), str(id3))
-
-    id4 = inc_index()
-    ast_graph.node(str(id4), str(p[3]))
-    ast_graph.edge(str(id), str(id4))
-
-    ast_graph.edge(str(id), str(p[4]))
-
-    id5 = inc_index()
-    ast_graph.node(str(id5), str(p[5]))
-    ast_graph.edge(str(id), str(id5))
-
-    if p[6]:
-        ast_graph.edge(str(id), str(p[6]))
-
-    id6 = inc_index()
-    ast_graph.node(str(id6), str(p[7]))
-    ast_graph.edge(str(id), str(id6))
-
-def p_lista_asig(p):
-    '''lista_asig : lista_asig COMA ID IGUAL valores
-                  | ID IGUAL valores'''
-
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('List Asig'))
-
-    if type(p[1]) == int :
-        ast_graph.edge(str(id), str(p[1]))
-
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
-
-        id3 = inc_index()
-        ast_graph.node(str(id3), str(p[3]))
-        ast_graph.edge(str(id), str(id3))
-
-        id4 = inc_index()
-        ast_graph.node(str(id4), str(p[4]))
-        ast_graph.edge(str(id), str(id4))
-
-        ast_graph.edge(str(id), str(p[5]))
-
-    else :
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('ID List'))
 
         id2 = inc_index()
         ast_graph.node(str(id2), str(p[1]))
@@ -1491,7 +1469,228 @@ def p_lista_asig(p):
         ast_graph.node(str(id3), str(p[2]))
         ast_graph.edge(str(id), str(id3))
 
-        ast_graph.edge(str(id), str(p[3]))
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
+
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
+
+        ast_graph.edge(str(id), str(p[5]))
+
+        id6 = inc_index()
+        ast_graph.node(str(id6), str(p[6]))
+        ast_graph.edge(str(id), str(id6))
+
+    except IndexError:
+        print('')
+
+def p_insert(p):
+    '''s_insert : INSERT INTO ID PARIZQ lista_id PARDER VALUES lista_values PTCOMA
+                | INSERT INTO ID VALUES lista_values PTCOMA '''
+                #| INSERT INTO ID PARIZQ lista_id PARDER s_select
+                #| INSERT INTO ID s_select''' 
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Insert Statement'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
+
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
+
+        ast_graph.edge(str(id), str(p[5]))
+
+        id6 = inc_index()
+        ast_graph.node(str(id6), str(p[6]))
+        ast_graph.edge(str(id), str(id6))
+
+        id7 = inc_index()
+        ast_graph.node(str(id7), str(p[7]))
+        ast_graph.edge(str(id), str(id7))
+
+        ast_graph.edge(str(id), str(p[8]))
+
+        id8 = inc_index()
+        ast_graph.node(str(id8), str(p[9]))
+        ast_graph.edge(str(id), str(id8))
+
+    except IndexError:
+        print('')
+
+def p_lista_values(p):
+    '''lista_values : lista_values COMA PARIZQ lista_valores PARDER
+                     | PARIZQ lista_valores PARDER'''
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Value List'))
+
+        if type(p[1]) == int:
+            ast_graph.edge(str(id), str(p[1]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+        if type(p[2]) == int:
+            ast_graph.edge(str(id), str(p[2]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[3]))
+        ast_graph.edge(str(id), str(id2))
+
+        ast_graph.edge(str(id), str(p[4]))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[5]))
+        ast_graph.edge(str(id), str(id2))
+
+
+    except IndexError:
+        print('')
+
+def p_lista_valores(p):
+    '''lista_valores : lista_valores COMA valores
+                     | valores'''
+    
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Values List'))
+        
+        ast_graph.edge(str(id), str(p[1]))
+
+        if p[2]:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
+
+        if p[3]:
+            ast_graph.edge(str(id), str(p[3]))
+
+    except IndexError:
+        print('')
+
+def p_valores(p):
+    '''valores : CADENA
+               | ENTERO
+               | DECIMA'''
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Values List'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+    except IndexError:
+        print('')
+
+def p_s_update(p):
+    '''s_update : UPDATE ID SET lista_asig PTCOMA
+                | UPDATE ID SET lista_asig WHERE expresion PTCOMA'''
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Values List'))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
+
+        id4 = inc_index()
+        ast_graph.node(str(id4), str(p[3]))
+        ast_graph.edge(str(id), str(id4))
+
+        ast_graph.edge(str(id), str(p[4]))
+
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[5]))
+        ast_graph.edge(str(id), str(id5))
+
+        if p[6]:
+            ast_graph.edge(str(id), str(p[6]))
+
+        id6 = inc_index()
+        ast_graph.node(str(id6), str(p[7]))
+        ast_graph.edge(str(id), str(id6))
+
+    except IndexError:
+        print('')
+
+def p_lista_asig(p):
+    '''lista_asig : lista_asig COMA ID IGUAL valores
+                  | ID IGUAL valores'''
+
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('List Asig'))
+
+        if type(p[1]) == int :
+            ast_graph.edge(str(id), str(p[1]))
+
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
+
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[3]))
+            ast_graph.edge(str(id), str(id3))
+
+            id4 = inc_index()
+            ast_graph.node(str(id4), str(p[4]))
+            ast_graph.edge(str(id), str(id4))
+
+            ast_graph.edge(str(id), str(p[5]))
+
+        else :
+
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
+
+            id3 = inc_index()
+            ast_graph.node(str(id3), str(p[2]))
+            ast_graph.edge(str(id), str(id3))
+
+            ast_graph.edge(str(id), str(p[3]))
+
+    except IndexError:
+        print('')
 
 
 def p_expresion(p):
@@ -1522,42 +1721,47 @@ def p_expresion(p):
                  | ID PUNTO ID
                  | valores'''
 
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id), str('Expresion'))
+    try:
 
-    if type(p[1]) == int :
-        ast_graph.edge(str(id), str(p[1]))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('Expresion'))
 
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[2]))
-        ast_graph.edge(str(id), str(id2))
+        if type(p[1]) == int :
+            ast_graph.edge(str(id), str(p[1]))
 
-        ast_graph.edge(str(id), str(p[3]))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-    else:
-        id2 = inc_index()
-        ast_graph.node(str(id2), str(p[1]))
-        ast_graph.edge(str(id), str(id2))
-
-        if type(p[2]) == int:
-            ast_graph.edge(str(id), str(p[2]))
+            ast_graph.edge(str(id), str(p[3]))
 
         else:
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(p[2]))
-            ast_graph.edge(str(id), str(id3))
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[1]))
+            ast_graph.edge(str(id), str(id2))
 
-            if type(p[3]) == int :
-                ast_graph.edge(str(id), str(p[3]))
+            if type(p[2]) == int:
+                ast_graph.edge(str(id), str(p[2]))
 
-                id4 = inc_index()
-                ast_graph.node(str(id4), str(p[4]))
-                ast_graph.edge(str(id), str(id4))
-            else :
-                id4 = inc_index()
-                ast_graph.node(str(id4), str(p[3]))
-                ast_graph.edge(str(id), str(id4))
+            else:
+                id3 = inc_index()
+                ast_graph.node(str(id3), str(p[2]))
+                ast_graph.edge(str(id), str(id3))
+
+                if type(p[3]) == int :
+                    ast_graph.edge(str(id), str(p[3]))
+
+                    id4 = inc_index()
+                    ast_graph.node(str(id4), str(p[4]))
+                    ast_graph.edge(str(id), str(id4))
+                else :
+                    id4 = inc_index()
+                    ast_graph.node(str(id4), str(p[3]))
+                    ast_graph.edge(str(id), str(id4))
+    
+    except IndexError:
+        print('')
 
 
 def p_error(p):
