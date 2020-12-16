@@ -247,7 +247,7 @@ def p_entrada(p):
                 | s_delete
                 | s_insert
                 | s_update
-                | s_select '''
+                | s_select'''
 
     #AST graphviz
     try:
@@ -293,31 +293,33 @@ def p_s_select(p):
 
         ast_graph.edge(str(id), str(p[4]))
 
-        if p[5] == ';':
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(';'))
-            ast_graph.edge(str(id), str(id3))
-        else:
+        if type(p[5]) == int:
             ast_graph.edge(str(id), str(p[5]))
-
-        if p[6] == ';':
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(';'))
-            ast_graph.edge(str(id), str(id3))
         else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[5]))
+            ast_graph.edge(str(id), str(id2))
+
+        if type(p[6]) == int:
             ast_graph.edge(str(id), str(p[6]))
-
-        if p[7] == ';':
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(';'))
-            ast_graph.edge(str(id), str(id3))
         else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[6]))
+            ast_graph.edge(str(id), str(id2))
+        
+        if type(p[7]) == int:
             ast_graph.edge(str(id), str(p[7]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[7]))
+            ast_graph.edge(str(id), str(id2))
 
-        if p[8] == ';':
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(';'))
-            ast_graph.edge(str(id), str(id3))
+        if type(p[8]) == int:
+            ast_graph.edge(str(id), str(p[8]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[8]))
+            ast_graph.edge(str(id), str(id2))
         
     except IndexError:
         print('')
@@ -329,7 +331,7 @@ def p_s_select(p):
 def p_list_cols(p):
     '''list_cols :  DISTINCT list_alias
                   | MULTI
-                  | list_alias '''
+                  | list_alias'''
     
     #AST graphviz
     try:
@@ -354,7 +356,7 @@ def p_list_cols(p):
 
 def p_list_alias(p):
     '''list_alias : list_alias COMA sel_id
-                  | sel_id '''
+                  | sel_id'''
     
     #AST graphviz
     try: 
@@ -474,7 +476,8 @@ def p_list_joins(p):
     '''list_joins : list_joins join_type JOIN ID join_conditions 
                   | list_joins JOIN ID join_conditions 
                   | join_type JOIN ID join_conditions
-                  | JOIN ID join_conditions'''
+                  | JOIN ID join_conditions
+                  | JOIN ID'''
     
     #AST graphviz
     try:
@@ -550,16 +553,16 @@ def p_join_conditions(p):
     '''join_conditions : ON expresion'''
     #AST graphviz
     try:
-        if p[1] :
-            id = inc_index()
-            p[0] = id
-            ast_graph.node(str(id), str('join conditions'))
 
-            id2 = inc_index()
-            ast_graph.node(str(id2), str(p[1]))
-            ast_graph.edge(str(id), str(id2))
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id), str('join conditions'))
 
-            ast_graph.edge(str(id), str(p[2]))
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
+
+        ast_graph.edge(str(id), str(p[2]))
 
     except IndexError:
         print('')
