@@ -1739,38 +1739,33 @@ def p_expresion(p):
         p[0] = id
         ast_graph.node(str(id), str('Expresion'))
 
-        if type(p[1]) == int :
+        if type(p[1]) == int:
             ast_graph.edge(str(id), str(p[1]))
-
-            id2 = inc_index()
-            ast_graph.node(str(id2), str(p[2]))
-            ast_graph.edge(str(id), str(id2))
-
-            ast_graph.edge(str(id), str(p[3]))
-
         else:
             id2 = inc_index()
             ast_graph.node(str(id2), str(p[1]))
             ast_graph.edge(str(id), str(id2))
 
-            if type(p[2]) == int:
-                ast_graph.edge(str(id), str(p[2]))
+        if type(p[2]) == int:
+            ast_graph.edge(str(id), str(p[2]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[2]))
+            ast_graph.edge(str(id), str(id2))
 
-            else:
-                id3 = inc_index()
-                ast_graph.node(str(id3), str(p[2]))
-                ast_graph.edge(str(id), str(id3))
+        if type(p[3]) == int:
+            ast_graph.edge(str(id), str(p[3]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[3]))
+            ast_graph.edge(str(id), str(id2))
 
-                if type(p[3]) == int :
-                    ast_graph.edge(str(id), str(p[3]))
-
-                    id4 = inc_index()
-                    ast_graph.node(str(id4), str(p[4]))
-                    ast_graph.edge(str(id), str(id4))
-                else :
-                    id4 = inc_index()
-                    ast_graph.node(str(id4), str(p[3]))
-                    ast_graph.edge(str(id), str(id4))
+        if type(p[4]) == int:
+            ast_graph.edge(str(id), str(p[4]))
+        else:
+            id2 = inc_index()
+            ast_graph.node(str(id2), str(p[4]))
+            ast_graph.edge(str(id), str(id2))
     
     except IndexError:
         print('')
