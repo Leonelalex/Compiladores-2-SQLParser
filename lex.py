@@ -250,10 +250,18 @@ def p_entrada(p):
                 | s_select '''
 
     #AST graphviz
-    id = inc_index()
-    p[0] = id
-    ast_graph.node(str(id),str("entrada"))
-    ast_graph.edge(str(id),str(p[1]))
+    try:
+
+        id = inc_index()
+        p[0] = id
+        ast_graph.node(str(id),str("entrada"))
+        ast_graph.edge(str(id),str(p[1]))
+
+        if p[2] :
+            ast_graph.edge(str(id), str(p[2]))
+
+    except IndexError:
+        print('')
 
 #region 'Select Analisis'
 
@@ -624,7 +632,7 @@ def p_create_type(p):
 
         id4 = inc_index()
         ast_graph.node(str(id4), str(p[3]))
-        ast_graph.node(str(id), str(id4))
+        ast_graph.edge(str(id), str(id4))
 
         id5 = inc_index()
         ast_graph.node(str(id5), str(p[4]))
@@ -632,21 +640,21 @@ def p_create_type(p):
 
         id6 = inc_index()
         ast_graph.node(str(id6), str(p[5]))
-        ast_graph.node(str(id), str(id6))
+        ast_graph.edge(str(id), str(id6))
 
         id7 = inc_index()
         ast_graph.node(str(id7), str(p[6]))
-        ast_graph,edge(str(id), str(id7))
+        ast_graph.edge(str(id), str(id7))
 
         ast_graph.edge(str(id), str(p[7]))
 
         id8 = inc_index()
         ast_graph.node(str(id8), str(p[8]))
-        ast_graph,edge(str(id), str(id8))
+        ast_graph.edge(str(id), str(id8))
 
         id9 = inc_index()
         ast_graph.node(str(id9), str(p[9]))
-        ast_graph,edge(str(id), str(id9))
+        ast_graph.edge(str(id), str(id9))
 
     except IndexError:
         print('')
@@ -664,21 +672,20 @@ def p_lista1(p):
 
         ast_graph.node(str(id), str('lista cadena'))
 
-        if p[2] :
+        if type(p[1]) == int:
             ast_graph.edge(str(id), str(p[1]))
-
-            id2 = inc_index()
-            ast_graph.node(str(id2), str(p[2]))
-            ast_graph.edge(str(id), str(id2))
-
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(p[3]))
-            ast_graph.node(str(id), str(id3))
-
-        else :
+        else:
             id2 = inc_index()
             ast_graph.node(str(id2), str(p[1]))
             ast_graph.edge(str(id), str(id2))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[2]))
+        ast_graph.edge(str(id), str(id2))
+
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[3]))
+        ast_graph.edge(str(id), str(id2))
     
     except IndexError:
         print('')
@@ -741,15 +748,15 @@ def p_time_zone(p):
 
         id2 = inc_index()
         ast_graph.node(str(id2), str(p[1]))
-        ast_graph,edge(str(id), str(id2))
+        ast_graph.edge(str(id), str(id2))
 
         id3 = inc_index()
         ast_graph.node(str(id3), str(p[1]))
-        ast_graph,edge(str(id), str(id3))
+        ast_graph.edge(str(id), str(id3))
 
         id4 = inc_index()
         ast_graph.node(str(id4), str(p[1]))
-        ast_graph,edge(str(id), str(id4))
+        ast_graph.edge(str(id), str(id4))
 
     except IndexError:
         print('')
@@ -764,45 +771,30 @@ def p_create_db(p):
         p[0] = id
         ast_graph.node(str(id), str('create statement'))
 
-        if p[6]:
+        id2 = inc_index()
+        ast_graph.node(str(id2), str(p[1]))
+        ast_graph.edge(str(id), str(id2))
 
-            id2 = inc_index()
-            ast_graph.node(str(id2), str(p[1]))
-            ast_graph.edge(str(id), str(id2))
+        id3 = inc_index()
+        ast_graph.node(str(id3), str(p[2]))
+        ast_graph.edge(str(id), str(id3))
 
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(p[2]))
-            ast_graph.edge(str(id), str(id3))
-
+        if type(p[3]) == int:
+            ast_graph.edge(str(id), str(p[3]))
+        else:
             id4 = inc_index()
             ast_graph.node(str(id4), str(p[3]))
             ast_graph.edge(str(id), str(id4))
 
-            id5 = inc_index()
-            ast_graph.node(str(id5), str(p[4]))
-            ast_graph.edge(str(id), str(id5))
+        id5 = inc_index()
+        ast_graph.node(str(id5), str(p[4]))
+        ast_graph.edge(str(id), str(id5))
 
-            ast_graph.edge(str(id), str(p[5]))
+        ast_graph.edge(str(id), str(p[5]))
 
-            id6 = inc_index()
-            ast_graph.node(str(id6), str(p[6]))
-            ast_graph.edge(str(id), str(id6))
-
-        else :
-
-            id2 = inc_index()
-            ast_graph.node(str(id2), str(p[1]))
-            ast_graph.edge(str(id), str(id2))
-
-            id3 = inc_index()
-            ast_graph.node(str(id3), str(p[2]))
-            ast_graph.edge(str(id), str(id3))
-
-            ast_graph.edge(str(id), str(p[3]))
-
-            id4 = inc_index()
-            ast_graph.node(str(id4), str(p[4]))
-            ast_graph.edge(str(id), str(id4))
+        id6 = inc_index()
+        ast_graph.node(str(id6), str(p[6]))
+        ast_graph.edge(str(id), str(id6))
 
     except IndexError:
         print('')
@@ -851,7 +843,7 @@ def p_c_db1(p):
 
         id2 = inc_index()
         ast_graph.node(str(id2), str(p[1]))
-        ast_graph.node(str(id), str(id2))
+        ast_graph.edge(str(id), str(id2))
 
         if p[2] :
             ast_graph.edge(str(id), str(p[2]))
@@ -1092,9 +1084,7 @@ def p_create_table(p):
         ast_graph.node(str(id5), str(p[4]))
         ast_graph.edge(str(id), str(id5))
 
-        id6 = inc_index()
-        ast_graph.node(str(id6), str(p[5]))
-        ast_graph.edge(str(id), str(id6))
+        ast_graph.edge(str(id), str(p[5]))
 
         id7 = inc_index()
         ast_graph.node(str(id7), str(p[6]))
@@ -1343,16 +1333,16 @@ def p_lista_id(p):
 
             id2 = inc_index()
             ast_graph.node(str(id2), str(p[2]))
-            ast_graph,edge(str(id), str(id2))
+            ast_graph.edge(str(id), str(id2))
 
             id3 = inc_index()
             ast_graph.node(str(id3), str(p[3]))
-            ast_graph,edge(str(id), str(id3))
+            ast_graph.edge(str(id), str(id3))
 
         else:
             id2 = inc_index()
             ast_graph.node(str(id2), str(p[1]))
-            ast_graph,edge(str(id), str(id2))
+            ast_graph.edge(str(id), str(id2))
 
     except IndexError:
         print('')
