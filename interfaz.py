@@ -4,7 +4,6 @@ from tkinter import scrolledtext
 from tkinter import messagebox
 from tkinter import filedialog
 import lex 
-import ejecucion
 
 def abrir_btn():
     print('open file')
@@ -27,7 +26,6 @@ def analizar_btn():
 
 def btnejecutar_click():
     print('ejecutando')
-    parse_result = ejecucion.ejecutar()
 
 def tblerrores_click():
     print('tabla errores')
@@ -37,7 +35,6 @@ def tblsimbolos_click():
 
 def ast_click():
     print('arbol AST')
-
 
 #--- Main Window
 window = Tk()
@@ -72,14 +69,11 @@ editor_box = scrolledtext.ScrolledText(window,width=90,height=17)
 editor_box.place(x=5, y=30)
 
 #---  Botones Analizar / Ejecutar
-btnanalizar = Button(window,text="Analizar",height=2, width=8, command=analizar_btn)
+btnanalizar = Button(window,text="Analizar",height=2, width=8,command=analizar_btn)
 btnanalizar.place(x=40,y=320)
 
-btnejecutar = Button(window,text="Ejecutar",height=2, width=8, command=btnejecutar_click)
+btnejecutar = Button(window,text="Ejecutar",height=2, width=8,command=btnejecutar_click)
 btnejecutar.place(x=130,y=320)
-
-#btngraficar = Button(window, text="Graficar", height=2, width=8, command=graficar_ast)
-#btngraficar.place(x= 220, y=320)
 
 #--- Consola de Salida
 lblsalida= Label(window,text="Consola salida",height=1, width=15)
