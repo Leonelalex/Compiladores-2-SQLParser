@@ -96,7 +96,8 @@ reservadas = {
     'asc'       : 'ASC',
     'desc'      : 'DESC',
     'inherits'  : 'INHERITS',
-    'distinct'  : 'DISTINCT'
+    'distinct'  : 'DISTINCT',
+    'use'       : 'USE'
 }
 
 # Lista de tokens
@@ -120,7 +121,8 @@ tokens = [
     'ID',
     'DECIMA',
     'ENTERO',
-    'PUNTO'
+    'PUNTO', 
+    'APOS'
 ] + list(reservadas.values())
 
 # Expresiones regulares par los tokens
@@ -140,6 +142,7 @@ t_SUMAS = r'\+'
 t_DIVIS = r'/'
 t_POTEN = r'\^'
 t_PUNTO = r'.'
+t_APOS = r'\''
 
 t_ignore = " \t"
 
@@ -187,14 +190,14 @@ def t_ENTERO(t):
 
 def t_nuevalinea(t):
     r'\n+'
-    global linea, columna
-    linea = linea + t.value.count('\n')
+
+    linea = t.value.count('\n')
     columna = 1
     t.lexer.lineno += t.value.count("\n")
 
 # Errores léxicos
 def t_error(t):
-    global linea, columna
+
     lex_error(t.value[0], linea, t.lexpos)
     t.lexer.skip(1)
 
@@ -228,6 +231,7 @@ def p_entrada(p):
                 | entrada s_insert
                 | entrada s_update
                 | entrada s_select
+                | entrada s_use
                 | create_type
                 | create_db
                 | show_db
@@ -239,8 +243,13 @@ def p_entrada(p):
                 | s_delete
                 | s_insert
                 | s_update
-                | s_select'''
+                | s_select
+                | s_use'''
 
+def p_s_use(p):
+    '''s_use : USE ID PTCOMA'''
+    cons = ins.UseDB(p[2])
+    lst_instrucciones.append(cons)
 
 #region 'Select Analisis'
 
@@ -305,42 +314,61 @@ def p_list_cols(p):
 
 
 def p_list_alias(p):
-    '''list_alias : list_alias COMA sel_id
-                  | sel_id'''
+    '''list_alias : list_alias COMA sel_id'''
+
+    p[0] = p[3].append(p[1])
+
+def p_list_alias_2(p):
+    '''list_alias : sel_id'''
     
+    p[0] = p[1]
 
 def p_sel_id(p):
     ''' sel_id : ID PUNTO ID AS ID
                   | ID PUNTO ID
                   | ID AS ID
                   | ID'''
+    p[0] = p[1]
 
-    #AST graphviz
-    try:
-        p[0] = p[1]
-
-    except IndexError:
-        print('')
 
 def p_list_from(p):
-    '''list_from :  list_from COMA from_id
-                  | from_id'''
+    '''list_from :  list_from COMA from_id'''
+
+    p[0] = p[3].append(p[1])
+
+def p_list_from(p):
+    '''list_from :  from_id'''
+    
+    p[0] = p[1]
     
 
 def p_from_id(p):
     '''from_id : ID AS ID
                 | ID'''
 
-    
+    p[0] = p[1]    
 
 def p_list_joins(p):
-    '''list_joins : list_joins join_type JOIN ID join_conditions 
-                  | list_joins JOIN ID join_conditions 
-                  | join_type JOIN ID join_conditions
-                  | JOIN ID join_conditions
-                  | JOIN ID'''
-    
+    '''list_joins : list_joins join_type JOIN ID join_conditions'''
 
+    p[0] = p[4].append(p[1])
+
+def p_list_joins_2(p):
+    '''list_joins : list_joins JOIN ID join_conditions'''
+
+    p[0] = p[3].append(p[1])
+
+def p_list_joins_3(p):
+    '''list_joins : join_type JOIN ID join_conditions'''
+
+    p[0] = p[3]
+
+def p_list_joins_4(p):
+    '''list_joins : JOIN ID join_conditions
+                  | JOIN ID'''
+
+    p[0] = p[2]
+    
 def p_join_type(p):
     '''join_type : LEFT OUTER
                  | RIGHT OUTER
@@ -350,7 +378,10 @@ def p_join_type(p):
                  | FULL
                  | INNER'''
 
-
+    if p[2] != None:
+        p[0] = p[1] + p[2]
+    else:
+        p[0] = p[1]
 
 def p_join_conditions(p):
     '''join_conditions : ON expresion'''
@@ -363,6 +394,7 @@ def p_list_conditions(p):
 def p_list_order(p):
     '''list_order : ORDER BY ID ASC
                   | ORDER BY ID DESC'''
+    p[0] = p[3]
 
 
 #end region 
@@ -389,34 +421,48 @@ def p_data_type(p):
             | BIGINT
             | DECIMAL
             | REAL
-            | DOUBLE PRECISION
             | MONEY
-            | CHARACTER VARYING PARIZQ ENTERO PARDER
-            | VARCHAR PARIZQ ENTERO PARDER
-            | CHARACTER PARIZQ ENTERO PARDER
-            | CHAR PARIZQ ENTERO PARDER
             | TIMESTAMP
-            | TIMESTAMP time_zone
             | DATA
             | TIME
-            | TIME time_zone
             | INTERVAL
             | ID'''
+
+    p[0] = p[1]
+
+def p_data_type_2(p):
+    '''data_type : DOUBLE PRECISION
+            | TIMESTAMP time_zone
+            | TIME time_zone'''
+
+    p[0] = p[1] + p[2]
+
+
+def p_data_type_3(p):
+    '''data_type :  VARCHAR PARIZQ ENTERO PARDER
+            | CHARACTER PARIZQ ENTERO PARDER
+            | CHAR PARIZQ ENTERO PARDER'''
+
+    p[0] = str(p[1]) + str(p[2]) + str(p[3]) + str(p[4])
     
 
 def p_time_zone(p):
     '''time_zone    : WITH TIME ZONE
                     | WITHOUT TIME ZONE'''
 
+    p[0] = str(p[1]) + str(p[2]) + str(p[3])
+
 
 def p_create_db(p):
     '''create_db : CREATE DATABASE c_db db_owner db_mode PTCOMA'''
-    CreateDB(p[2], p[3], p[4])
+    cons = ins.CreateDB(p[3], p[4], p[5])
+    lst_instrucciones.append(cons)
 
 
 def p_create_db_2(p):
     '''create_db : CREATE OR REPLACE DATABASE c_db db_owner db_mode PTCOMA'''
-    CreateDB(p[2], p[3], p[4])
+    ins.CreateDB(p[5], p[6], p[7])
+    lst_instrucciones.append(cons)
 
 def p_c_db(p):
     '''c_db : db_exist c_db1'''
@@ -434,23 +480,14 @@ def p_c_db1(p):
 
 
 def p_db_owner(p):
-    '''db_owner : OWNER igual_id 
-                  |'''
-    p[0] = p[2]
+    '''db_owner : OWNER IGUAL ID 
+                |'''
+    p[0] = p[3]
 
 def p_db_mode(p):
-    '''db_mode : MODE igual_int
-                    |'''
-    p[0] = p[2]
-
-def p_igual_id(p):
-    '''igual_id : IGUAL ID
-                | ID'''
-
-
-def p_igual_int(p):
-    '''igual_int : IGUAL ENTERO
-                | ENTERO'''
+    '''db_mode : MODE IGUAL ENTERO
+                |'''
+    p[0] = p[3]
 
 
 def p_show_db(p):
@@ -484,9 +521,12 @@ def p_drop_db_2(p):
 
 def p_create_table(p): 
     '''create_table   : CREATE TABLE ID PARIZQ valores PARDER PTCOMA'''
+    cons = ins.CreateTable(p[3], p[5], None)
+    lst_instrucciones.append(cons)
 
 def p_create_table_2(p):
     '''create_table   : CREATE TABLE ID PARIZQ valores PARDER INHERITS PARIZQ ID PARDER PTCOMA'''
+    cons = ins.CreateTable(p[3], p[5], p[9])
 
 def p_valores_2(p):
     '''valores  : colum_list
@@ -495,11 +535,18 @@ def p_valores_2(p):
 
 def p_colum_list(p):
     '''colum_list   : ID data_type const'''
-    p[0] = p[1]
+    arr = []
+    arr.append(p[1])
+    arr.append(p[2])
+    p[0] = arr
 
 def p_colum_list_2(p):
     '''colum_list   : colum_list COMA ID data_type const'''
-    p[0] = p[3].append(p[1])
+    arr = []
+    arr.append(p[3])
+    arr.append(p[4])
+    p[1].append(arr)
+    p[0] = p[1]
 
 
 def p_const_keys(p):
@@ -535,15 +582,19 @@ def p_const(p):
 
 def p_lista_id(p):
     '''lista_id : lista_id COMA ID'''
-    p[0] = p[3].append(p[1])
+    arr = []
+    arr.append(p[3])
+    arr.append(p[1])
+    p[0] = arr
 
 def p_lista_id_2(p):
     '''lista_id : ID'''
     p[0] = p[1]
 
 def p_drop_table(p):
-    'drop_table : DROP TABLE ID PTCOMA'
-    Drop(p[3])
+    '''drop_table : DROP TABLE ID PTCOMA'''
+    cons = ins.Drop(p[3])
+    lst_instrucciones.append(cons)
 
 
 def p_alter_table(p):
@@ -649,5 +700,8 @@ def lex_error(lex, linea, columna):
 def ejecutar(entrada):
     global parser
     parse_result = parser.parse(entrada)
+
+    for cons in lst_instrucciones :
+        cons.execute()
 
     return parse_result

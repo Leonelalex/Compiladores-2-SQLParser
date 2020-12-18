@@ -27,7 +27,8 @@ def analizar_btn():
 
 def btnejecutar_click():
     print('ejecutando')
-    parse_result = ejecucion.ejecutar()
+    txt_entrada = editor_box.get(1.0, END+"-1c")
+    parse_result = ejecucion.ejecutar(str(txt_entrada))
 
 def tblerrores_click():
     print('tabla errores')
