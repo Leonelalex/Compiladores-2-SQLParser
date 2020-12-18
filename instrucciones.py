@@ -17,26 +17,30 @@ class Select():
         print('ejecutando select')
 
 class AlterTable():
-    def __init__()
+    def __init__():
         print('init')
     def ejecutar():
         print('ejecutando alter table')
 
 class CreateDB():
-    def __init__():
-        print('init')
+    def __init__(self, id, owner, mode):
+        self.id = id
+        self.owner = owner
+        self.mode = mode
+
     def ejecutar():
         print('Ejecutando Create DB')
 
 class ShowDB():
-    def __init__():
-        print('init')
+    def __init__(self):
+        print('show')
     def ejecutar():
         print('Ejecutando ShowDB')
 
 class Drop():
-    def __init__():
-        print('init')
+    def __init__(self, id):
+        self.id = id
+
     def ejecutar():
         print('Ejecutando Drop')
 

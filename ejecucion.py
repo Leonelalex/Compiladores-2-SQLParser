@@ -4,15 +4,6 @@ import re
 
 import instrucciones as ins 
 
-ast_graph = Digraph(comment='AST', engine='dot')
-
-errores_lexicos = ""        #Variable para concatenar los errores lexicos y luego agregarlos al archivo de errores
-errores_sintacticos = ""    #Variable para concatenar los errores sintacticos y luego agregarlos al archivo de errores
-cont_error_lexico = 0
-cont_error_sintactico = 0
-linea = 1
-columna = 1
-
 i = 0
 lst_instrucciones = []
 
@@ -250,48 +241,49 @@ def p_entrada(p):
                 | s_update
                 | s_select'''
 
-    #AST graphviz
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 #region 'Select Analisis'
 
 def p_s_select(p):
     '''s_select : SELECT dist list_cols FROM list_from PTCOMA'''
-    ins.Select(p[2], p[3], p[5], None, None, None).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], None, None, None)
+    lst_instrucciones.append(cosn)
     
 
 def p_s_select2(p):
     '''s_select : SELECT dist list_cols FROM list_from list_conditions PTCOMA'''
-    ins.Select(p[2], p[3], p[5], None, None, p[6]).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], None, None, p[6])
+    lst_instrucciones.append(cons)
     
 def p_s_select3(p):
     '''s_select : SELECT dist list_cols FROM list_from list_order PTCOMA'''
-    ins.Select(p[2], p[3], p[5], None, p[6], None).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], None, p[6], None)
+    lst_instrucciones.append(cons)
 
 def p_s_select4(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins PTCOMA'''
-    ins.Select(p[2], p[3], p[5], p[6], None, None).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], p[6], None, None)
+    lst_instrucciones.append(cons)
 
 def p_s_select5(p):
     '''s_select : SELECT dist list_cols FROM list_from list_conditions list_order PTCOMA'''
-    ins.Select(p[2], p[3], p[5], None, p[7], p[6]).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], None, p[7], p[6])
+    lst_instrucciones(cons)
 
 def p_s_select6(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins list_conditions PTCOMA'''
-    ins.Select(p[2], p[3], p[5], p[6], None, p[7]).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], p[6], None, p[7])
+    lst_instrucciones.append(cons)
 
 def p_s_select7(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins list_order PTCOMA'''
-    ins.Select(p[2], p[3], p[5], p[6], p[7], None).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], p[6], p[7], None)
+    lst_instrucciones.append(cons)
 
 def p_s_select8(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins list_conditions list_order PTCOMA'''
-    ins.Select(p[2], p[3], p[5], p[6], p[8], p[7]).ejecutar()
+    cons = ins.Select(p[2], p[3], p[5], p[6], p[8], p[7])
+    lst_instrucciones.append(cons)
 
 def p_dist(p):
     '''dist : DISTINCT
@@ -309,11 +301,6 @@ def p_list_cols(p):
                   | MULTI
                   | list_alias'''
     
-    #AST graphviz
-    try:
-
-    except IndexError:
-        print('out of range')
     
 
 
@@ -321,11 +308,6 @@ def p_list_alias(p):
     '''list_alias : list_alias COMA sel_id
                   | sel_id'''
     
-    #AST graphviz
-    try: 
-
-    except IndexError:
-        print('')
 
 def p_sel_id(p):
     ''' sel_id : ID PUNTO ID AS ID
@@ -335,7 +317,7 @@ def p_sel_id(p):
 
     #AST graphviz
     try:
-
+        p[0] = p[1]
 
     except IndexError:
         print('')
@@ -344,21 +326,10 @@ def p_list_from(p):
     '''list_from :  list_from COMA from_id
                   | from_id'''
     
-    #AST graphviz
-    try:
-
-    except IndexError:
-        print('')
 
 def p_from_id(p):
     '''from_id : ID AS ID
                 | ID'''
-
-    #AST graphviz
-    try:
-
-    except IndexError:
-        print('')
 
     
 
@@ -369,14 +340,6 @@ def p_list_joins(p):
                   | JOIN ID join_conditions
                   | JOIN ID'''
     
-    #AST graphviz
-    try:
-
-    except IndexError:
-        print('')
-
-    
-
 
 def p_join_type(p):
     '''join_type : LEFT OUTER
@@ -386,70 +349,37 @@ def p_join_type(p):
                  | RIGHT
                  | FULL
                  | INNER'''
-    #AST graphviz
-    try:
 
-    except IndexError:
-        print('')
 
 
 def p_join_conditions(p):
     '''join_conditions : ON expresion'''
-    #AST graphviz
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 
 def p_list_conditions(p):
     '''list_conditions : WHERE expresion'''
 
-    #AST graphviz
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_list_order(p):
     '''list_order : ORDER BY ID ASC
                   | ORDER BY ID DESC'''
 
-    #AST graphviz
-    try:
-
-    except IndexError:
-        print('')
 
 #end region 
 
 def p_create_type(p):
-    'create_type : CREATE TYPE ID AS ENUM PARIZQ lista1 PARDER PTCOMA'
-
-    #AST graphviz
-    try:
-        
-
-
-    except IndexError:
-        print('')
+    '''create_type : CREATE TYPE ID AS ENUM PARIZQ lista1 PARDER PTCOMA'''
 
     
 
 def p_lista1(p):
-    '''lista1 : lista1 COMA CADENA
-            | CADENA'''
-    
-    #AST Graphviz
-    try:
+    '''lista1 : lista1 COMA CADENA'''
+    p[0] = p[3].append(p[1])
 
+def p_lista1_2(p):
+    '''lista1 : CADENA'''
+    p[0] = p[1]
     
-    except IndexError:
-        print('')
 
 def p_data_type(p):
     '''data_type : NUMERIC
@@ -472,186 +402,111 @@ def p_data_type(p):
             | TIME time_zone
             | INTERVAL
             | ID'''
-    try:
-
-
-    except IndexError:
-        print('')
-
     
 
 def p_time_zone(p):
     '''time_zone    : WITH TIME ZONE
                     | WITHOUT TIME ZONE'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_create_db(p):
-    '''create_db : CREATE DATABASE c_db PTCOMA
-                 | CREATE OR REPLACE DATABASE c_db PTCOMA'''
-
-    try:
+    '''create_db : CREATE DATABASE c_db db_owner db_mode PTCOMA'''
+    CreateDB(p[2], p[3], p[4])
 
 
-
-    except IndexError:
-        print('')
-
+def p_create_db_2(p):
+    '''create_db : CREATE OR REPLACE DATABASE c_db db_owner db_mode PTCOMA'''
+    CreateDB(p[2], p[3], p[4])
 
 def p_c_db(p):
-    '''c_db : IF NOT EXISTS c_db1
-            | c_db1'''
+    '''c_db : db_exist c_db1'''
 
-    try:
+    p[0] = p[2]
 
-
-
-    except IndexError:
-        print('')
+def p_c_dc_exist(p):
+    '''db_exist : IF NOT EXISTS
+                | '''
 
 def p_c_db1(p):
-    '''c_db1 : ID owner_mode
-             | ID'''
+    '''c_db1 : ID '''
 
-    try: 
-
-    except IndexError:
-        print('')
+    p[0] = p[1]
 
 
-def p_owner_mode(p):
-    '''owner_mode : owner_mode OWNER igual_id 
-                  | owner_mode MODE igual_int
-                  | OWNER igual_id 
-                  | MODE igual_int'''
+def p_db_owner(p):
+    '''db_owner : OWNER igual_id 
+                  |'''
+    p[0] = p[2]
 
-    try:
-
-
-    except IndexError:
-        print('')
+def p_db_mode(p):
+    '''db_mode : MODE igual_int
+                    |'''
+    p[0] = p[2]
 
 def p_igual_id(p):
     '''igual_id : IGUAL ID
                 | ID'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_igual_int(p):
     '''igual_int : IGUAL ENTERO
                 | ENTERO'''
-    try:
 
-
-
-    except IndexError:
-        print('')
 
 def p_show_db(p):
     '''show_db : SHOW DATABASES PTCOMA'''
-
-    try:
-
-    except IndexError:
-        print('')
+    #ShowDB()
 
 def p_alter_db(p):
     '''alter_db : ALTER DATABASE ID al_db PTCOMA'''
-
-    try: 
-
-
-    except IndexError:
-        print('')
      
 
 def p_al_db(p):
     '''al_db : RENAME TO ID
             | OWNER TO owner_db'''
     
-    try:
-
-
-    except IndexError:
-        print('')
+    p[0] = p[3]
 
 def p_owner_db(p):
     '''owner_db : ID
                 | CURRENT_USER
                 | SESSION_USER'''
     
-    try:
-
-
-    except IndexError:
-        print('')
+    p[0] = p[1]
 
 def p_drop_db(p):
-    '''drop_db  : DROP DATABASE ID PTCOMA
-                | DROP DATABASE IF EXISTS ID PTCOMA'''
+    '''drop_db  : DROP DATABASE ID PTCOMA'''
+    Drop(p[3])
 
-    try: 
-
-
-    except IndexError:
-        print('')
+def p_drop_db_2(p):
+    '''drop_db  : DROP DATABASE IF EXISTS ID PTCOMA'''
+    Drop(p[5])
 
 def p_create_table(p): 
-    '''create_table   : CREATE TABLE ID PARIZQ valores PARDER PTCOMA
-                      | CREATE TABLE ID PARIZQ valores PARDER INHERITS PARIZQ ID PARDER PTCOMA'''
+    '''create_table   : CREATE TABLE ID PARIZQ valores PARDER PTCOMA'''
 
-    try: 
+def p_create_table_2(p):
+    '''create_table   : CREATE TABLE ID PARIZQ valores PARDER INHERITS PARIZQ ID PARDER PTCOMA'''
 
-
-
-    except IndexError:
-        print('')
-
-def p_valores(p):
+def p_valores_2(p):
     '''valores  : colum_list
-                | colum_list COMA const_keys '''
-    try: 
-
-
-
-    except IndexError:
-        print('')
+                | colum_list COMA const_keys'''
+    p[0] = p[1]
 
 def p_colum_list(p):
-    '''colum_list   : colum_list COMA ID data_type 
-                    | colum_list COMA ID data_type const
-                    | ID data_type
-                    | ID data_type const'''
+    '''colum_list   : ID data_type const'''
+    p[0] = p[1]
 
-    try:
+def p_colum_list_2(p):
+    '''colum_list   : colum_list COMA ID data_type const'''
+    p[0] = p[3].append(p[1])
 
-
-
-    except IndexError:
-        print('')
 
 def p_const_keys(p):
     '''const_keys   : const_keys COMA PRIMARY KEY PARIZQ lista_id PARDER
                     | const_keys COMA FOREIGN KEY PARIZQ lista_id PARDER REFERENCES ID PARIZQ lista_id PARDER
                     | PRIMARY KEY PARIZQ lista_id PARDER
                     | FOREIGN KEY PARIZQ lista_id PARDER REFERENCES ID PARIZQ lista_id PARDER'''
-
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 
 def p_const(p):
@@ -674,40 +529,26 @@ def p_const(p):
                 | CONSTRAINT ID CHECK PARIZQ expresion PARDER
                 | CHECK PARIZQ expresion PARDER
                 | PRIMARY KEY
-                | REFERENCES ID PARIZQ lista_id PARDER'''
+                | REFERENCES ID PARIZQ lista_id PARDER
+                |'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_lista_id(p):
-    '''lista_id : lista_id COMA ID
-                | ID'''
+    '''lista_id : lista_id COMA ID'''
+    p[0] = p[3].append(p[1])
 
-    try: 
-
-
-    except IndexError:
-        print('')
+def p_lista_id_2(p):
+    '''lista_id : ID'''
+    p[0] = p[1]
 
 def p_drop_table(p):
     'drop_table : DROP TABLE ID PTCOMA'
+    Drop(p[3])
 
-    try:
-
-    except IndexError:
-        print('')
 
 def p_alter_table(p):
     'alter_table    : ALTER TABLE ID acciones PTCOMA'
-    try:
 
-
-    except IndexError:
-        print('')
 
 def p_acciones(p):
     '''acciones : ADD acc
@@ -718,104 +559,49 @@ def p_acciones(p):
                 | DROP COLUMN ID
                 | RENAME COLUMN ID TO ID'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_acc(p):
     '''acc  : const
             | const_keys'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_delete(p):
     '''s_delete : DELETE FROM ID PTCOMA
                 | DELETE FROM ID WHERE expresion PTCOMA '''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_insert(p):
     '''s_insert : INSERT INTO ID PARIZQ lista_id PARDER VALUES lista_values PTCOMA
                 | INSERT INTO ID VALUES lista_values PTCOMA '''
-                #| INSERT INTO ID PARIZQ lista_id PARDER s_select
-                #| INSERT INTO ID s_select''' 
-
-    try:
 
 
-
-    except IndexError:
-        print('')
 
 def p_lista_values(p):
     '''lista_values : lista_values COMA PARIZQ lista_valores PARDER
                      | PARIZQ lista_valores PARDER'''
 
-    try:
-
-
-
-
-    except IndexError:
-        print('')
 
 def p_lista_valores(p):
     '''lista_valores : lista_valores COMA valores
                      | valores'''
     
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_valores(p):
     '''valores : CADENA
                | ENTERO
                | DECIMA'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 def p_s_update(p):
     '''s_update : UPDATE ID SET lista_asig PTCOMA
                 | UPDATE ID SET lista_asig WHERE expresion PTCOMA'''
 
-    try:
 
-
-
-    except IndexError:
-        print('')
 
 def p_lista_asig(p):
     '''lista_asig : lista_asig COMA ID IGUAL valores
                   | ID IGUAL valores'''
 
-    try:
-
-
-
-    except IndexError:
-        print('')
 
 
 def p_expresion(p):
@@ -846,18 +632,10 @@ def p_expresion(p):
                  | ID PUNTO ID
                  | valores'''
 
-    try:
-
-
-    
-    except IndexError:
-        print('')
 
 
 def p_error(p):
-    global linea, columna
-    sin_error(p.type, p.value, linea, p.lexpos)
-    columna = columna + len(p.value)
+    print('error')
 
 
 # Construyendo el analizador sintáctico
@@ -865,15 +643,11 @@ parser = yacc.yacc()
 
 #Funcion para concatenar los errores léxicos en una variable
 def lex_error(lex, linea, columna):
-    global cont_error_lexico, errores_lexicos
-    cont_error_lexico = cont_error_lexico + 1
-    errores_lexicos = errores_lexicos + "<tr><td align=""center""><font color=""black"">" + str(cont_error_lexico) + "<td align=""center""><font color=""black"">" + str(lex) + "</td><td align=""center""><font color=""black"">" + str(linea) + "</td><td align=""center""><font color=""black"">" + str(columna) + "</td></tr>" + '\n'
+    print('error')
 
 
 def ejecutar(entrada):
-    global parser, linea, columna
-    linea = 1
-    columna = 1
+    global parser
     parse_result = parser.parse(entrada)
 
     return parse_result
