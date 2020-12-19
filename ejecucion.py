@@ -718,14 +718,14 @@ def p_lista_values(p):
 
 def p_lista_valores(p):
     '''lista_valores : lista_valores COMA valores'''
-    arr = []
-    arr.append(p[1])
-    arr.append(p[3])
-    p[0] = arr
+    p[1].append(p[3])
+    p[0] = p[1]
 
 def p_lista_valores_2(p):
     '''lista_valores : valores'''
-    p[0] = p[1]
+    arr = []
+    arr.append(p[1])
+    p[0] = arr
     
 
 def p_valores(p):
