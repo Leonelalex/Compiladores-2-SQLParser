@@ -48,7 +48,7 @@ class ShowDB():
     def __init__(self):
         print('show')
 
-    def execute():
+    def execute(self):
         print('Ejecutando ShowDB')
 
 class Drop():
@@ -84,7 +84,7 @@ class Insert():
         self.id = id
         self.vals = vals
 
-    def execute():
+    def execute(self):
         print('Ejecutando Insert')
         print('id : ' + str(self.id))
         for val in self.vals:
