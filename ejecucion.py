@@ -598,60 +598,133 @@ def p_drop_table(p):
 
 
 def p_alter_table(p):
-    'alter_table    : ALTER TABLE ID acciones PTCOMA'
+    '''alter_table : ALTER TABLE ID alter_cols alter_constraint forein_keys alter_refs PTCOMA'''
+    refs = None
+    forein = None
+    constrain = None
+    cols = None
+
+    if p[7] != None:
+        refs = p[7]
+    if p[6] != None:
+        foreign = p[6]
+    if p[5] != None:
+        constrain = p[5]
+    if p[4] != None:
+        cols = p[4]
+
+    cons = ins.AlterTable(p[3], cols, constrain, foreign, refs)
+    lst_instrucciones.append(cons)
+
+def p_alter_addcols(p):
+    '''alter_cols : ADD COLUMN ID data_type
+                | '''
+    if p[3] != None:
+        p[0] = p[3]
+
+def p_alter_constrint(p):
+    '''alter_constraint : ADD CONSTRAINT ID
+                        | '''
+    if p[3] != None:
+        p[0] = p[3]
+
+def p_alter_foreinkeys(p):
+    '''forein_keys : FOREIGN KEY PARIZQ ID PARDER
+                    |  '''
+    if p[4] != None:
+        p[0] = p[4]
+
+def p_alter_refs(p):
+    '''alter_refs : REFERENCES ID PARIZQ ID PARDER
+                    | '''
+    try:
+        p[0] = str(p[2]) + str(p[3]) + str(p[4]) + str(p[5])
+    except IndexError:
+        print('')
 
 
-def p_acciones(p):
-    '''acciones : ADD acc
-                | ADD COLUMN ID data_type
-                | ALTER COLUMN ID TYPE data_type
-                | ALTER COLUMN ID SET const
-                | DROP CONSTRAINT ID
-                | DROP COLUMN ID
-                | RENAME COLUMN ID TO ID'''
+#def p_acciones(p):
+#    '''acciones : ADD acc
+#                | ADD COLUMN ID data_type
+#                | ADD CONSTRAINT ID
+#                | ALTER COLUMN ID TYPE data_type
+#                | ALTER COLUMN ID SET const
+#                | DROP CONSTRAINT ID
+#                | DROP COLUMN ID
+#                | RENAME COLUMN ID TO ID'''
 
 
-def p_acc(p):
-    '''acc  : const
-            | const_keys'''
+#def p_acc(p):
+#    '''acc  : const
+#            | const_keys'''
 
 
 def p_delete(p):
-    '''s_delete : DELETE FROM ID PTCOMA
-                | DELETE FROM ID WHERE expresion PTCOMA '''
+    '''s_delete : DELETE FROM ID PTCOMA'''
+    cons = ins.Delete(str(p[3], None))
+    lst_instrucciones.append(cons)
+
+def p_delete_2(p):
+    '''s_delete : DELETE FROM ID WHERE expresion PTCOMA '''
+    cons = ins.Delete(str(p[3], p[5]))
+    lst_instrucciones.append(cons)
 
 
 def p_insert(p):
-    '''s_insert : INSERT INTO ID PARIZQ lista_id PARDER VALUES lista_values PTCOMA
-                | INSERT INTO ID VALUES lista_values PTCOMA '''
+    '''s_insert : INSERT INTO ID PARIZQ lista_id PARDER VALUES lista_values PTCOMA '''
+    cons = ins.Insert(p[3], p[8])
+    lst_instrucciones.append(cons)
 
-
+def p_insert_2(p):
+    '''s_insert : INSERT INTO ID VALUES PARIZQ lista_values PARDER PTCOMA '''
+    cons = ins.Insert(p[3], p[6])
+    lst_instrucciones.append(cons)
 
 def p_lista_values(p):
-    '''lista_values : lista_values COMA PARIZQ lista_valores PARDER
-                     | PARIZQ lista_valores PARDER'''
-
+    '''lista_values : lista_valores '''
+    p[0] = p[1]
 
 def p_lista_valores(p):
-    '''lista_valores : lista_valores COMA valores
-                     | valores'''
+    '''lista_valores : lista_valores COMA valores'''
+    arr = []
+    arr.append(p[1])
+    arr.append(p[3])
+    p[0] = arr
+
+def p_lista_valores_2(p):
+    '''lista_valores : valores'''
+    p[0] = p[1]
     
 
 def p_valores(p):
     '''valores : CADENA
                | ENTERO
                | DECIMA'''
-
+    p[0] = p[1]
 
 def p_s_update(p):
-    '''s_update : UPDATE ID SET lista_asig PTCOMA
-                | UPDATE ID SET lista_asig WHERE expresion PTCOMA'''
+    '''s_update : UPDATE ID SET lista_asig PTCOMA'''
+    cons = ins.Update(p[2], p[4])
+    lst_instrucciones.append(cons)
 
+def p_s_update_2(p):
+    '''s_update : UPDATE ID SET lista_asig WHERE expresion PTCOMA'''
+    cons = ins.Update(p[2], p[4])
+    lst_instrucciones.append(cons)
 
 
 def p_lista_asig(p):
-    '''lista_asig : lista_asig COMA ID IGUAL valores
-                  | ID IGUAL valores'''
+    '''lista_asig : lista_asig COMA ID IGUAL valores'''
+    exp = str(p[3]) + str(p[4]) + str(p[5])
+    arr = []
+    arr.append(p[1])
+    arr.append(exp)
+    p[0] = arr
+
+def p_lista_asig(p):
+    '''lista_asig :  ID IGUAL valores'''
+    exp = str(p[1]) + str(p[2]) + str(p[3])
+    p[0] = exp
 
 
 
@@ -682,6 +755,8 @@ def p_expresion(p):
                  | ID
                  | ID PUNTO ID
                  | valores'''
+
+
 
 
 
