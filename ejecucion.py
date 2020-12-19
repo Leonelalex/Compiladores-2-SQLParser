@@ -97,7 +97,9 @@ reservadas = {
     'desc'      : 'DESC',
     'inherits'  : 'INHERITS',
     'distinct'  : 'DISTINCT',
-    'use'       : 'USE'
+    'use'       : 'USE',
+    'true'      : 'TRUE',
+    'false'     : 'FALSE'
 }
 
 # Lista de tokens
@@ -536,9 +538,9 @@ def p_valores_2(p):
     p[0] = p[1]
 
 def p_valores_2(p):
-    '''valores  : colum_list COMA const_keys'''
+    '''valores  : colum_list const_keys'''
 
-    p[1].append(p[3])
+    p[1].append(p[2])
     p[0] = p[1]
 
 def p_colum_list(p):
@@ -573,13 +575,17 @@ def p_const_keys(p):
     p[0] = arr
 
 def p_const_keys_2(p):
-    '''const_keys   : PRIMARY KEY PARIZQ lista_id PARDER
-                    | FOREIGN KEY PARIZQ lista_id PARDER REFERENCES ID PARIZQ lista_id PARDER'''
+    '''const_keys   : COMA PRIMARY KEY PARIZQ lista_id PARDER
+                    | COMA FOREIGN KEY PARIZQ lista_id PARDER REFERENCES ID PARIZQ lista_id PARDER'''
     arr = []
     key = str(p[1]) + str(p[2])
     arr.append(key)
     arr.append(p[4])
     p[0] = arr
+
+def p_const_keys_2(p):
+    '''const_keys   : '''
+
 
 
 def p_const(p):
@@ -725,7 +731,9 @@ def p_lista_valores_2(p):
 def p_valores(p):
     '''valores : CADENA
                | ENTERO
-               | DECIMA'''
+               | DECIMA
+               | TRUE
+               | FALSE'''
     p[0] = p[1]
 
 def p_s_update(p):
@@ -788,6 +796,12 @@ def p_expresion(p):
 
 def p_error(p):
     print('error')
+    if p == None:
+        token = "end of file"
+    else:
+        token = f"{p.type}({p.value}) on line {p.lineno}"
+    print(token)
+
 
 
 # Construyendo el analizador sintáctico
