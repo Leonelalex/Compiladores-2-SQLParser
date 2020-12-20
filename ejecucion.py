@@ -654,7 +654,7 @@ def p_alter_addcols(p):
     if p[3] != None:
         p[0] = p[3]
 
-def p_alter_constrint(p):
+def p_alter_constraint(p):
     '''alter_constraint : ADD CONSTRAINT ID
                         | '''
     if p[3] != None:
@@ -738,33 +738,41 @@ def p_valores(p):
 
 def p_s_update(p):
     '''s_update : UPDATE ID SET lista_asig PTCOMA'''
-    cons = ins.Update(p[2], p[4])
+    cons = ins.Update(p[2], p[4], None)
     lst_instrucciones.append(cons)
 
 def p_s_update_2(p):
     '''s_update : UPDATE ID SET lista_asig WHERE expresion PTCOMA'''
-    cons = ins.Update(p[2], p[4])
+    cons = ins.Update(p[2], p[4], p[6])
     lst_instrucciones.append(cons)
 
 
 def p_lista_asig(p):
     '''lista_asig : lista_asig COMA ID IGUAL valores'''
     exp = str(p[3]) + str(p[4]) + str(p[5])
-    arr = []
-    arr.append(p[1])
-    arr.append(exp)
-    p[0] = arr
+    p[1].append(exp)
+    p[0] = exp
 
 def p_lista_asig(p):
     '''lista_asig :  ID IGUAL valores'''
     exp = str(p[1]) + str(p[2]) + str(p[3])
-    p[0] = exp
-
+    arr = []
+    arr.append(exp)
+    p[0] = arr
 
 
 def p_expresion(p):
-    '''expresion : NOT expresion
-                 | expresion OR expresion
+    '''expresion : PI
+                 | ID
+                 | valores'''
+    p[0] = p[1]
+
+def p_expresion_2(p):
+    '''expresion : NOT expresion'''
+    p[0] = str(p[1]) + str(p[2])
+
+def p_expresion_3(p):
+    '''expresion : expresion OR expresion
                  | expresion AND expresion
                  | expresion MAYOR expresion
                  | expresion MENOR expresion
@@ -772,27 +780,21 @@ def p_expresion(p):
                  | expresion MENIG expresion
                  | expresion IGUAL expresion
                  | expresion DIFEQ expresion
-                 | MENOS expresion %prec UMENOS
-                 | SUMAS expresion %prec USUMAS
                  | expresion POTEN expresion
                  | expresion MULTI expresion
                  | expresion DIVIS expresion
                  | expresion SUMAS expresion
                  | expresion MENOS expresion
                  | PARIZQ expresion PARDER
-                 | SUM PARIZQ expresion PARDER
-                 | AVG PARIZQ expresion PARDER
-                 | MAX PARIZQ expresion PARDER
-                 | PI
+                 | ID PUNTO ID'''
+    p[0] = str(p[1]) + str(p[2]) + str(p[3])
+
+def p_expresion(p):
+    '''expresion : MENOS expresion %prec UMENOS
+                 | SUMAS expresion %prec USUMAS
                  | POWER PARIZQ expresion PARDER
-                 | SQRT PARIZQ expresion PARDER
-                 | ID
-                 | ID PUNTO ID
-                 | valores'''
-
-
-
-
+                 | SQRT PARIZQ expresion PARDER'''
+    p[0] = str(p[1]) + str(p[2]) + str(p[3]) + str(p[4])
 
 def p_error(p):
     print('error')

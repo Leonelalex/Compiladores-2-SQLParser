@@ -112,13 +112,19 @@ class Delete():
         print('id : ' + str(self.id))
 
 class Update():
-    def __init__(self, id, vals):
+    def __init__(self, id, vals, conds):
         self.id = id
         self.vals = vals
+        self.conds = conds
 
     def execute(self):
         print('Ejecutando Update')
-        print('id : ' + str(id))
+        print('id : ' + str(self.id))
+        for val in self.vals:
+            print('set : ' + val)
+        if self.conds != None:
+            for cond in self.conds:
+                print('condicion : ' + str(cond))
 
 '''
 import tabla_simbolos as TS
