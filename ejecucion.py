@@ -472,7 +472,7 @@ def p_list_group(p):
 def p_group_id(p):
     '''group_id : group_id COMA ID 
                 | group_id COMA ENTERO'''
-    print(type(p[1]))
+    #print(type(p[1]))
     if type(p[1]) == list:
         p[1].append(p[3])
         p[0] = p[1]
