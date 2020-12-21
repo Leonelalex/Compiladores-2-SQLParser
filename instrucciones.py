@@ -4,17 +4,33 @@ class Instruccion():
         self.instruccion = instruccion
 
 class Select():
-    def __init__(self, dist, selcol, fromcol, joins, order, conditions):
+    def __init__(self, dist, selcol, fromcol, joins, order, conditions, group):
         self.dist = dist
         self.selcol = selcol
         self.fromcol = fromcol
         self.joins = joins
         self.order = order
         self.conditions = conditions
+        self.group = group
 
-    def execute():
-        #Llamar metodo que realizara el select
+    def execute(self):
         print('ejecutando select')
+        if self.dist != ' ':
+            print('Distinct')
+
+        for sel in self.selcol:
+            print('column : ' + str(sel))
+
+        for col in self.fromcol:
+            print('table : ' + str(col))
+
+        for cond in self.conditions:
+            print('Condicion : ' + str(cond))
+
+        for id in self.group:
+            print('Group by : ' + str(id))
+
+        print('Order by : ' + str(self.order))
 
 class AlterTable():
     def __init__(self, id, cols, constrain, fkey, ref):
