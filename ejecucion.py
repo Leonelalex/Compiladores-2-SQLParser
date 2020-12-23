@@ -6,6 +6,7 @@ import instrucciones as ins
 
 i = 0
 lst_instrucciones = []
+useDB = ''
 
 def inc_index():
     global i
@@ -253,6 +254,8 @@ def p_entrada(p):
 
 def p_s_use(p):
     '''s_use : USE ID PTCOMA'''
+    global useDB
+    useDB = str(p[2])
     cons = ins.UseDB(p[2])
     lst_instrucciones.append(cons)
 
