@@ -6,6 +6,7 @@ import instrucciones as ins
 
 i = 0
 lst_instrucciones = []
+execution_results = []
 useDB = ''
 
 def inc_index():
@@ -909,6 +910,7 @@ def ejecutar(entrada):
     parse_result = parser.parse(entrada)
 
     for cons in lst_instrucciones :
-        cons.execute()
+        res = cons.execute()
+        execution_results.append(res)
 
-    return parse_result
+    return execution_results
