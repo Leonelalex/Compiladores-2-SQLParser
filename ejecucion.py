@@ -356,98 +356,140 @@ def p_s_use(p):
 
 def p_s_select(p):
     '''s_select : SELECT dist list_cols FROM list_from PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], None, None, None)
-    lst_instrucciones.append(cosn)
-    
+    cons = ins.Select(p[2], p[3], p[5], None, None, None, None)
+    lst_instrucciones.append(cons)
+
+def p_s_select9(p):
+    '''s_select : SELECT dist list_cols FROM list_from list_conditions PTCOMA'''
+    cons = ins.Select(p[2], p[3], p[5], None, None, p[6], None)
+    lst_instrucciones.append(cons)    
 
 def p_s_select2(p):
-    '''s_select : SELECT dist list_cols FROM list_from list_conditions PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], None, None, p[6])
+    '''s_select : SELECT dist list_cols FROM list_from list_conditions list_group PTCOMA'''
+    cons = ins.Select(p[2], p[3], p[5], None, None, p[6], p[7])
     lst_instrucciones.append(cons)
     
 def p_s_select3(p):
     '''s_select : SELECT dist list_cols FROM list_from list_order PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], None, p[6], None)
+    cons = ins.Select(p[2], p[3], p[5], None, p[6], None, None)
     lst_instrucciones.append(cons)
 
 def p_s_select4(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], p[6], None, None)
+    cons = ins.Select(p[2], p[3], p[5], p[6], None, None, None)
     lst_instrucciones.append(cons)
 
 def p_s_select5(p):
     '''s_select : SELECT dist list_cols FROM list_from list_conditions list_order PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], None, p[7], p[6])
-    lst_instrucciones(cons)
+    cons = ins.Select(p[2], p[3], p[5], None, p[7], p[6], None)
+    lst_instrucciones.append(cons)
+
+def p_s_select10(p):
+    '''s_select : SELECT dist list_cols FROM list_from list_conditions list_group list_order PTCOMA'''
+    cons = ins.Select(p[2], p[3], p[5], None, p[8], p[6], p[7])
+    lst_instrucciones.append(cons)
 
 def p_s_select6(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins list_conditions PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], p[6], None, p[7])
+    cons = ins.Select(p[2], p[3], p[5], p[6], None, p[7], None)
     lst_instrucciones.append(cons)
 
 def p_s_select7(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins list_order PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], p[6], p[7], None)
+    cons = ins.Select(p[2], p[3], p[5], p[6], p[7], None, None)
     lst_instrucciones.append(cons)
 
 def p_s_select8(p):
     '''s_select : SELECT dist list_cols FROM list_from list_joins list_conditions list_order PTCOMA'''
-    cons = ins.Select(p[2], p[3], p[5], p[6], p[8], p[7])
+    cons = ins.Select(p[2], p[3], p[5], p[6], p[8], p[7], None)
     lst_instrucciones.append(cons)
 
 def p_dist(p):
     '''dist : DISTINCT
              | '''
     try:
-        if p[1]:
-            p[0] = p[1]
-        else: 
-            p[0] = ' '
+        p[0] = p[1]
     except IndexError:
+        p[0] = ' '
         print('out of range')
 
 def p_list_cols(p):
-    '''list_cols :  DISTINCT list_alias
-                  | MULTI
-                  | list_alias'''
-    
-    
+    '''list_cols :  MULTI'''
+    arr = []
+    arr.append(p[1])
+    p[0] = arr
+
+
+def p_list_cols_2(p):
+    '''list_cols :  list_alias'''
+    p[0] = p[1]        
 
 
 def p_list_alias(p):
     '''list_alias : list_alias COMA sel_id'''
-
-    p[0] = p[3].append(p[1])
+    p[1].append(p[3])
+    p[0] = p[1]
 
 def p_list_alias_2(p):
     '''list_alias : sel_id'''
-    
-    p[0] = p[1]
+    arr = []
+    arr.append(p[1])
+    p[0] = arr
+
+def p_list_alias_3(p):
+    '''sel_id : sel_op PARIZQ sel_id PARDER op_id'''
+    p[0] = p[3]
+
+def p_list_alias_4(p):
+    '''sel_id : sel_op PARIZQ ID FROM ID PARDER op_id'''
+    p[0] = p[5]
+
+def p_op_id(p):
+    '''op_id : ID
+             | '''
+
+def p_sel_op(p):
+    '''sel_op : SUM
+              | MAX
+              | AVG
+              | COUNT
+              | EXTRACT'''
 
 def p_sel_id(p):
     ''' sel_id : ID PUNTO ID AS ID
                   | ID PUNTO ID
                   | ID AS ID
                   | ID'''
+    
     p[0] = p[1]
 
 
 def p_list_from(p):
     '''list_from :  list_from COMA from_id'''
 
-    p[0] = p[3].append(p[1])
+    p[0] = p[1].append(p[3])
 
 def p_list_from(p):
-    '''list_from :  from_id'''
-    
-    p[0] = p[1]
+    '''list_from : from_id'''
+    arr = []
+    arr.append(p[1])
+    p[0] = arr
+
+def p_list_from(p):
+    '''list_from : from_id COMA ID AS ID
+                 | from_id COMA ID
+                 | from_id COMA ID ID'''
+
+    arr = []
+    arr.append(p[1])
+    arr.append(p[3])
+    p[0] = arr
     
 
 def p_from_id(p):
     '''from_id : ID AS ID
-                | ID'''
-
-    p[0] = p[1]    
+                | ID ID'''
+    p[0] = p[1] 
 
 def p_list_joins(p):
     '''list_joins : list_joins join_type JOIN ID join_conditions'''
@@ -489,14 +531,57 @@ def p_join_conditions(p):
 
 
 def p_list_conditions(p):
-    '''list_conditions : WHERE expresion'''
+    '''list_conditions : WHERE where_cond'''
+    p[0] = p[2]
 
+def p_where_cond(p):
+    '''where_cond : expresion'''
+    arr = []
+    arr.append(p[1])
+    p[0] = arr
+
+def p_where_cond_2(p):
+    '''where_cond : where_cond AND expresion'''
+    print(p[1])
+    print(p[3])
+    p[1].append(p[3])
+    p[0] = p[1]
 
 def p_list_order(p):
     '''list_order : ORDER BY ID ASC
-                  | ORDER BY ID DESC'''
+                  | ORDER BY ID DESC 
+                  | ORDER BY ENTERO ASC
+                  | ORDER BY ENTERO DESC 
+                  | ORDER BY ID  
+                  | ORDER BY ENTERO'''
     p[0] = p[3]
 
+def p_list_group(p):
+    '''list_group : GROUP BY group_id '''
+    if type(p[3]) == str:
+        arr = []
+        arr.append(p[3])
+        p[0] = arr
+    else:
+        p[0] = p[3]
+
+def p_group_id(p):
+    '''group_id : group_id COMA ID 
+                | group_id COMA ENTERO'''
+    #print(type(p[1]))
+    if type(p[1]) == list:
+        p[1].append(p[3])
+        p[0] = p[1]
+    else:
+        arr = []
+        arr.append(p[1])
+        arr.append(p[3])
+        p[0] = arr
+
+def p_group_id_2(p):
+    '''group_id : ID 
+                | ENTERO'''
+    p[0] = p[1]
 
 #end region 
 
