@@ -27,29 +27,40 @@ class Select():
         col_index = 0
         self.data = []
         self.header_names = []
-
-        if self.selcol[0] == '*':
+        aux_headers = []
+        if self.selcol[0] != '*':
             for tb in self.fromtb:
-                headers = TS.get_column_name(base_actual, tb)
+                headers = ts.get_column_name(base_actual, tb)
                 table_data = j.extractTable(base_actual, tb)
                 for header in headers:
                     col_index = 0
                     for col in self.selcol:
 
                         if col == header:
-                            raw_result.append(table_data[col_index])
-
+                            aux_headers.append(col)
+                            
+                            for dt in table_data:
+                                aux_res = []
+                                aux_res.append(dt[col_index])
+                                raw_result.append(aux_res)
+                            
+                            print(header)
+                            print(raw_result)
                         col_index = col_index + 1
+            self.data = raw_result
+            self.header_names = aux_headers
+
         else:
             for tb in self.fromtb:
+                headers = ts.get_column_name(base_actual, tb)
                 table_data = j.extractTable(base_actual, tb)
                 for row in table_data:
                     raw_result.append(row)
+            print(raw_result)
+            self.data = raw_result
+            self.header_names = headers
 
-        self.data = raw_result
-        self.header_names = headers
-
-        self.order_table()
+        #self.order_table()
         res = self.printTable()
         return res
 
