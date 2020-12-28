@@ -33,7 +33,7 @@ class Select():
                 headers = ts.get_column_name(base_actual, tb)
                 table_data = j.extractTable(base_actual, tb)
                 for header in headers:
-                    col_index = 0
+                   
                     for col in self.selcol:
 
                         if col == header:
@@ -46,7 +46,8 @@ class Select():
                             
                             print(header)
                             print(raw_result)
-                        col_index = col_index + 1
+
+                    col_index = col_index + 1
             self.data = raw_result
             self.header_names = aux_headers
 
