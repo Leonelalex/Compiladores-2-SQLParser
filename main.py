@@ -29,8 +29,8 @@ def btnejecutar_click():
     print('ejecutando')
     txt_entrada = editor_box.get(1.0, END+"-1c")
     exec_result = ejecucion.ejecutar(str(txt_entrada))
-    for res in exec_result:
-        console_box.insert(INSERT, str(res))
+    
+    console_box.insert(INSERT, exec_result[1])
 
 
 def tblerrores_click():

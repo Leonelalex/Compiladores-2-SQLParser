@@ -48,9 +48,9 @@ class Select():
         self.data = raw_result
         self.header_names = headers
 
-        filter_table()
         order_table()
-        printTable()
+        res = printTable()
+        return res
 
     def order_table(self):
         print('Ordenando Data')
@@ -71,11 +71,6 @@ class Select():
         print(sortedArr)
         tablaRes = sortedArr
 
-
-
-    def filter_table(self):
-        print('Filtrando Data')
-
     def printTable(self):
     
         table = PT.PrettyTable()
@@ -86,6 +81,7 @@ class Select():
             table.add_row(row)
 
         print(table)
+        return table
 
 class AlterDB():
     def __init__(self, oldid, newid):
