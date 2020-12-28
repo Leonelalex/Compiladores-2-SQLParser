@@ -267,7 +267,7 @@ def t_ID(t):
 
 def t_CADENA(t):
     r'([\"]|[\']).*?([\"]|[\'])'
-    t.value = '\'' + t.value[1:-1] '\''
+    t.value = '\'' + t.value[1:-1] +'\''
     return t 
 
 def t_DECIMA(t):
@@ -469,13 +469,13 @@ def p_list_from(p):
 
     p[0] = p[1].append(p[3])
 
-def p_list_from(p):
+def p_list_from_2(p):
     '''list_from : from_id'''
     arr = []
     arr.append(p[1])
     p[0] = arr
 
-def p_list_from(p):
+def p_list_from_3(p):
     '''list_from : from_id COMA ID AS ID
                  | from_id COMA ID
                  | from_id COMA ID ID'''
@@ -488,7 +488,8 @@ def p_list_from(p):
 
 def p_from_id(p):
     '''from_id : ID AS ID
-                | ID ID'''
+                | ID ID
+                | ID'''
     p[0] = p[1] 
 
 def p_list_joins(p):

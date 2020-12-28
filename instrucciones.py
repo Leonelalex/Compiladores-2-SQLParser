@@ -1,7 +1,8 @@
 import tabla_simbolos as TS
 import Errores as E
 import jsonMode as j
-import PrettyTable as PT
+import prettytable as PT
+import numpy as np
 
 class Instruccion():
     def __init__(self, tipo, instruccion):
@@ -18,9 +19,9 @@ class Select():
         self.conditions = conditions
         self.group = group
 
-    def execute(self):
+    def execute(self, ts):
         print('ejecutando select')
-        global base_actual
+        base_actual = ts.get_dbActual().id
         raw_result = []
         headers = []
         col_index = 0
@@ -48,8 +49,8 @@ class Select():
         self.data = raw_result
         self.header_names = headers
 
-        order_table()
-        res = printTable()
+        self.order_table()
+        res = self.printTable()
         return res
 
     def order_table(self):
@@ -64,7 +65,7 @@ class Select():
             t.append(nodo)
         
         arr2D = t
-        columnIndex = order
+        #columnIndex = order
 
         sortedArr = np.sort(arr2D, axis = 0)
         sortedArr = sortedArr[::-1]
@@ -75,7 +76,7 @@ class Select():
     
         table = PT.PrettyTable()
 
-        x.field_names = self.header_names
+        table.field_names = self.header_names
 
         for row in self.data:
             table.add_row(row)
