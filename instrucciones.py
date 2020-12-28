@@ -27,17 +27,23 @@ class Select():
         self.data = []
         self.header_names = []
 
-        for tb in self.fromtb:
-            headers = TS.get_column_name(base_actual, tb)
-            table_data = j.extractTable(base_actual, tb)
-            for header in headers:
-                col_index = 0
-                for col in self.selcol:
+        if self.selcol[0] == '*':
+            for tb in self.fromtb:
+                headers = TS.get_column_name(base_actual, tb)
+                table_data = j.extractTable(base_actual, tb)
+                for header in headers:
+                    col_index = 0
+                    for col in self.selcol:
 
-                    if col == header:
-                        raw_result.append(table_data[col_index])
+                        if col == header:
+                            raw_result.append(table_data[col_index])
 
-                    col_index = col_index + 1
+                        col_index = col_index + 1
+        else:
+            for tb in self.fromtb:
+                table_data = j.extractTable(base_actual, tb)
+                for row in table_data:
+                    raw_result.append(row)
 
         self.data = raw_result
         self.header_names = headers
@@ -48,8 +54,24 @@ class Select():
 
     def order_table(self):
         print('Ordenando Data')
-        for col in self.order:
-            
+        arr2D = self.data
+        t = []
+        for x in range(0,len(arr2D)):
+            val = arr2D[x]
+            nodo = []
+            for y in range(0,len(val)):
+                nodo.append(val[y])
+            t.append(nodo)
+        
+        arr2D = t
+        columnIndex = order
+
+        sortedArr = np.sort(arr2D, axis = 0)
+        sortedArr = sortedArr[::-1]
+        print(sortedArr)
+        tablaRes = sortedArr
+
+
 
     def filter_table(self):
         print('Filtrando Data')
